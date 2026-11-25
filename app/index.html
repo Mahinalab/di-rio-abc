@@ -567,6 +567,23 @@ app.addEventListener("focusout",()=>{if(pendente)setTimeout(()=>render(),50)});
 function go(v){S.view=v;S.expanded=null;S.confirmDel=null;S.cfgDraft=null;S.contaForm={};pararRespiracao();render(true);window.scrollTo(0,0)}
 function toast(t){S.toast=t;render(true);setTimeout(()=>{if(S.toast===t){S.toast="";render(true)}},2600)}
 
+/* ---------- convite para pôr na tela inicial ---------- */
+let pedidoInstalar=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();pedidoInstalar=e;render()});
+window.addEventListener("appinstalled",()=>{pedidoInstalar=null;render(true)});
+function cardInstalar(){const lem=ls.get("lembrete",{})||{};
+  if(lem.on||ls.get("saidasOn",false)||ls.get("instalarFechado",false))return null;
+  const fechar=()=>{ls.set("instalarFechado",true);render(true)};
+  const ios=ehIOS(),inst=instalado(),podeAtivar=pushOk()&&(!ios||inst);
+  const passos=inst?"Toque em \u201cAtivar notificações\u201d e escolha o horário do lembrete. Para os avisos de compras, coloque também os horários em que você sai de casa."
+    :ios?"Primeiro coloque o app na tela inicial: no Safari, toque em Compartilhar (o quadrado com a seta para cima) e depois em \u201cAdicionar à Tela de Início\u201d. Abra pelo ícone novo e ative as notificações em Ajustes."
+    :pedidoInstalar?"Toque em \u201cColocar na tela inicial\u201d para abrir como um app, e depois em \u201cAtivar notificações\u201d."
+    :"Para abrir como um app, no Chrome toque no menu (os três pontinhos) e em \u201cAdicionar à tela inicial\u201d. Depois toque em \u201cAtivar notificações\u201d.";
+  return h("div",{class:"card soft"},h("h2",{text:"Quer receber notificações para não esquecer do check-in e das compras?"}),h("p",{class:"small",text:passos}),
+    h("div",{class:"row"},
+      pedidoInstalar&&!ios&&!inst?h("button",{class:"btn primary",onclick:async()=>{const p=pedidoInstalar;pedidoInstalar=null;try{p.prompt();await p.userChoice}catch(e){}render(true)}},"Colocar na tela inicial"):null,
+      podeAtivar?h("button",{class:"btn"+(pedidoInstalar&&!inst?"":" primary"),onclick:()=>go("ajustes")},"Ativar notificações"):null,
+      h("button",{class:"btn ghost",onclick:fechar},"Agora não")))}
 function view(){
   if(!S.pronto)return h("div",{class:"login"},h("p",{class:"muted",text:"Abrindo…"}));
   if(!S.perfil)return telaLogin();
@@ -579,7 +596,7 @@ function view(){
                  :{inicio:inicioParceiro,compras:telaCompras,historico:telaHistorico,padroes:telaPadroes,ajudar:telaAjudar,ajustes:telaAjustes};
   if(ela&&S.legado)telas.migrar=telaMigrar;
   const f=telas[S.view]||telas.inicio;
-  return h("div",null,h("main",{class:"wrap"},avisoDb(),f()),nav(ela));
+  return h("div",null,h("main",{class:"wrap"},avisoDb(),S.view==="inicio"?cardInstalar():null,f()),nav(ela));
 }
 function nav(ela){
   const itens=ela?[["inicio","Início",IC.home],["historico","Histórico",IC.list],["padroes","Padrões",IC.chart],["calma","Calma",IC.leaf],["ajustes","Ajustes",IC.gear]]

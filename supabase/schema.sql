@@ -159,4 +159,8 @@ grant execute on function abc_entrar(text), abc_recuperar(text, text), abc_criar
   abc_lembrete_checkin(text, text) to anon, authenticated;
 
 -- código de convite inicial (troque o texto entre aspas antes de rodar)
+-- O robô dos lembretes (GitHub Actions) usa a chave secreta, que entra como service_role.
+grant select, insert, update on table abc_servidor to service_role;
+grant select, update, delete on table abc_lembretes to service_role;
+
 select abc_definir_convite('CONVITE-AQUI');

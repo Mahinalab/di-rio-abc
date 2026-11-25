@@ -1,0 +1,1225 @@
+<!doctype html><html lang="pt-BR"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Diário ABC"><meta name="theme-color" content="#2D6A6F"><script src="config.js"></script><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Diário ABC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Lexend:wght@400;500;600&display=swap">
+<style>
+/* Layout: one calm column, one question per screen, big targets, fixed bottom bar. Low-stimulation palette (cool slate + muted teal), mood on a blue→sage→amber diverging scale. */
+:root{
+  --bg:#EDF1F3; --surface:#FFFFFF; --surface-2:#E2E8EB; --line:#CBD5DA;
+  --fg:#1C2830; --muted:#55656F; --accent:#2D6A6F; --accent-fg:#FFFFFF; --accent-soft:#D3E6E6;
+  --warn:#9A5B12; --warn-soft:#F6E7D2; --alert:#9C3B36; --alert-soft:#F5DEDC; --ok:#3D6B47;
+  --m-3:#2F4F86; --m-2:#4A6FA8; --m-1:#8AA5CC; --m0:#7E9F8C; --m1:#D9B25E; --m2:#C98A2E; --m3:#A8641C;
+  --font-display:"Lexend",system-ui,sans-serif; --font-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:14px; --fs:17px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12181C; --surface:#1A2228; --surface-2:#232D34; --line:#33414A;
+  --fg:#E3EAEE; --muted:#9AAAB3; --accent:#6FB3B5; --accent-fg:#0E1A1B; --accent-soft:#1E3A3C;
+  --warn:#E0B06A; --warn-soft:#3A2D1A; --alert:#E79A92; --alert-soft:#3D2423; --ok:#8CC198;
+  --m-3:#7D9BD6; --m-2:#8FAEE0; --m-1:#A9C0E3; --m0:#8FB39D; --m1:#E3C47E; --m2:#DDA559; --m3:#D08A45;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12181C; --surface:#1A2228; --surface-2:#232D34; --line:#33414A;
+  --fg:#E3EAEE; --muted:#9AAAB3; --accent:#6FB3B5; --accent-fg:#0E1A1B; --accent-soft:#1E3A3C;
+  --warn:#E0B06A; --warn-soft:#3A2D1A; --alert:#E79A92; --alert-soft:#3D2423; --ok:#8CC198;
+  --m-3:#7D9BD6; --m-2:#8FAEE0; --m-1:#A9C0E3; --m0:#8FB39D; --m1:#E3C47E; --m2:#DDA559; --m3:#D08A45;
+  color-scheme:dark}
+html.grande{--fs:20px}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:var(--fs);line-height:1.5}
+html.calmo *{animation:none!important;transition:none!important}
+h1,h2,h3{font-family:var(--font-display);font-weight:500;line-height:1.25;text-wrap:balance;margin:0}
+h1{font-size:1.6em} h2{font-size:1.25em} h3{font-size:1.05em}
+p{margin:0}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 120px;display:flex;flex-direction:column;gap:18px}
+.muted{color:var(--muted)} .small{font-size:.86em}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+.stack{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card.soft{background:var(--surface-2);border-color:transparent}
+.card.warn{background:var(--warn-soft);border-color:transparent}
+.card.alert{background:var(--alert-soft);border-color:transparent}
+.eyebrow{font-size:.78em;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 18px;min-height:48px;cursor:pointer;font-weight:700}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--accent)}
+.btn.danger{background:var(--alert);color:var(--surface);border-color:var(--alert)}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.5;cursor:default}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.action{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:18px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);cursor:pointer;min-height:120px}
+.action:hover{border-color:var(--accent)}
+.action .ico{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.action b{font-family:var(--font-display);font-weight:500;font-size:1.1em}
+.action.calm .ico{background:var(--surface-2);color:var(--fg)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 15px;min-height:44px;cursor:pointer;text-align:left}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent);font-weight:700}
+.chip small{display:block;font-size:.78em;opacity:.85;font-weight:400}
+.chip.tall{border-radius:12px}
+.group-title{font-weight:700;margin-top:6px}
+.scale{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;text-align:left;min-height:52px}
+.opt[aria-pressed="true"]{border:2px solid var(--accent);background:var(--accent-soft);font-weight:700}
+.sw{width:22px;height:22px;border-radius:50%;flex:none}
+.hscale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.hscale .opt{flex-direction:column;gap:2px;padding:10px 4px;text-align:center;justify-content:center;font-size:.9em}
+.hscale .opt b{font-size:1.2em;font-family:var(--font-display)}
+textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface);min-height:48px}
+textarea{min-height:96px;resize:vertical}
+label.lbl{font-weight:700;display:block;margin-bottom:6px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:.85em;background:var(--surface-2);font-weight:700}
+.pill .sw{width:10px;height:10px}
+.progress{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.footer{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:5}
+.footer .in{max-width:720px;margin:0 auto;display:flex;gap:10px}
+.footer .in .btn{flex:1}
+.nav .in{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.nav button{background:none;border:0;border-radius:10px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.74em;color:var(--muted);cursor:pointer;min-height:52px}
+.nav button[aria-current="page"]{color:var(--accent);font-weight:700;background:var(--accent-soft)}
+.nav svg{width:22px;height:22px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.entry{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:left;width:100%}
+.entry .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chain{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:start}
+.chain .k{font-family:var(--font-display);font-weight:600;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.chain .v{min-width:0;padding-top:3px}
+.day-h{font-family:var(--font-display);font-size:.95em;color:var(--muted);margin-top:8px}
+.pin-dots{display:flex;gap:12px;justify-content:center;margin:8px 0}
+.pin-dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--accent)}
+.pin-dots i.on{background:var(--accent)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:320px;margin:0 auto;width:100%}
+.pad button{min-height:64px;font-size:1.4em;font-family:var(--font-display);border-radius:14px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+.login{min-height:100%;display:flex;flex-direction:column;justify-content:center;gap:20px;max-width:420px;margin:0 auto;padding:32px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px));text-align:center}
+.chart-box{overflow-x:auto}
+.chart-box svg{display:block;width:100%;min-width:480px;height:auto}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:minmax(0,10em) 1fr 2.5em;gap:10px;align-items:center;font-size:.92em}
+.bar .t{height:12px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar .t i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.bar .n{font-variant-numeric:tabular-nums;text-align:right;color:var(--muted)}
+.breath{width:220px;height:220px;margin:10px auto;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;transform:scale(.6);transition:transform 4s ease-in-out}
+.breath.in{transform:scale(1)}
+.breath.out{transform:scale(.6);transition-duration:6s}
+.breath span{font-family:var(--font-display);font-size:1.2em;transform:none}
+.comm{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.cm{border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:14px;display:flex;flex-direction:column;gap:10px;justify-content:space-between;min-width:0}
+.cm-t{font-weight:700;font-size:1.05em}
+.cm-a{display:flex;gap:6px;flex-wrap:wrap}
+.cm-a .btn{padding:8px 12px;min-height:44px;text-decoration:none;display:inline-flex;align-items:center}
+.reply{display:flex;flex-wrap:wrap;gap:6px}
+.sos-btn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;width:100%;padding:18px 20px;border-radius:var(--r);border:2px solid var(--accent);background:var(--accent-soft);cursor:pointer;min-height:76px}
+.sos-btn b{font-family:var(--font-display);font-weight:600;font-size:1.25em;color:var(--fg)}
+.sos-btn span{color:var(--muted);font-size:.92em}
+.emerg{display:flex;align-items:center;gap:16px;width:100%;padding:20px;border-radius:var(--r);background:var(--alert);color:#fff;text-decoration:none;min-height:92px;cursor:pointer}
+.emerg:hover{filter:brightness(1.06)}
+.emerg-i{width:48px;height:48px;flex:none;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center}
+.emerg-i svg{width:26px;height:26px}
+.emerg-t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.emerg-t b{font-family:var(--font-display);font-weight:600;font-size:1.35em;line-height:1.2}
+.emerg-t span{font-size:.92em;opacity:.92}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .emerg{background:#8E3A35}}
+:root[data-theme="dark"] .emerg{background:#8E3A35}
+/* modo sobrecarga: visual único, escuro e de baixo estímulo, igual em qualquer tema */
+.sos{position:fixed;inset:0;z-index:15;background:#0E1316;color:#D6DEE2;color-scheme:dark;overflow-y:auto;display:flex;flex-direction:column}
+.sos .in{flex:1;max-width:620px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:22px;padding:calc(18px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) 18px max(20px,env(safe-area-inset-left,0px))}
+.sos .topo{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#8E9CA4;font-size:.9em}
+.sos .dots{display:flex;gap:6px}.sos .dots i{width:8px;height:8px;border-radius:50%;background:#2A353B}.sos .dots i.on{background:#7FB5B7}
+.sos .meio{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.sos h1{font-size:clamp(30px,7vw,46px);color:#E6ECEF;font-weight:500}
+.sos .d{font-size:clamp(19px,4.6vw,24px);line-height:1.5;color:#C3CED3}
+.sos .por{font-size:.95em;color:#8E9CA4}
+.sos .base{display:flex;flex-direction:column;gap:10px;padding:0 max(20px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));max-width:620px;width:100%;margin:0 auto}
+.sos .b1{min-height:64px;border-radius:16px;border:0;background:#7FB5B7;color:#0E1316;font-family:var(--font-display);font-size:1.2em;font-weight:600;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
+.sos .b2{min-height:52px;border-radius:16px;border:1px solid #2F3B42;background:transparent;color:#C3CED3;font-size:1em;cursor:pointer}
+.sos .x{background:none;border:0;color:#8E9CA4;cursor:pointer;min-height:44px;padding:0 6px;font:inherit}
+.sos .breath{background:#1C3436}
+.sos .breath span{color:#E6ECEF}
+.sos .card{background:#172024;border-color:#26323A;color:#D6DEE2}
+.sos .card.alert{background:#2C1C1C}
+.sos .card .btn{background:#172024;color:#D6DEE2;border-color:#3A474F}
+.sos .card .muted,.sos .small.muted{color:#8E9CA4}
+.bigcard{position:fixed;inset:0;background:var(--surface);z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:max(24px,env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));text-align:center}
+.bigcard p{font-family:var(--font-display);font-size:clamp(28px,8vw,56px);line-height:1.2;text-wrap:balance}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:12px;z-index:30;font-weight:700;max-width:calc(100% - 32px)}
+.phone{font-family:var(--font-display);font-size:1.5em;font-variant-numeric:tabular-nums;user-select:all}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0}
+.toggle input{width:24px;height:24px;accent-color:var(--accent)}
+ul.clean{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+details summary{cursor:pointer;font-weight:700;min-height:40px;display:flex;align-items:center}
+input[type=password],input[type=tel]{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface);min-height:48px}
+.swatches{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.swatch{width:44px;height:44px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0}
+.swatch[aria-pressed="true"]{box-shadow:0 0 0 3px var(--fg)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--surface-2);border-radius:12px;padding:4px}
+.tabs button{border:0;background:transparent;border-radius:9px;min-height:44px;cursor:pointer;font-weight:700;color:var(--muted)}
+.tabs button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.pad button.ok{background:var(--accent);color:var(--accent-fg);border-color:var(--accent);font-weight:700}
+.pad button.ok[disabled]{opacity:.45;cursor:default}
+.code{font-family:var(--font-display);font-size:1.35em;letter-spacing:.06em;user-select:all;word-break:break-all}
+.linkbtn{background:none;border:0;color:var(--accent);cursor:pointer;font-weight:700;min-height:44px;padding:0 4px;text-decoration:underline;align-self:center}
+</style>
+
+<div id="app"></div>
+<div id="overlay"></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- utilidades ---------- */
+const app=document.getElementById("app"), overlay=document.getElementById("overlay");
+const ls={get(k,d){try{const v=localStorage.getItem("abc:"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+          set(k,v){try{localStorage.setItem("abc:"+k,JSON.stringify(v))}catch(e){}},
+          del(k){try{localStorage.removeItem("abc:"+k)}catch(e){}}};
+function h(tag,attrs,...kids){const el=document.createElement(tag);
+  if(attrs)for(const[k,v]of Object.entries(attrs)){if(v==null||v===false)continue;
+    if(k.startsWith("on"))el.addEventListener(k.slice(2),v);
+    else if(k==="class")el.className=v;
+    else if(k==="text")el.textContent=v;
+    else if(k==="style")el.setAttribute("style",v);
+    else el.setAttribute(k,v===true?"":v);}
+  for(const c of kids.flat()){if(c==null||c===false)continue;el.append(c instanceof Node?c:document.createTextNode(String(c)))}
+  return el}
+const NS="http://www.w3.org/2000/svg";
+function s(tag,attrs,...kids){const el=document.createElementNS(NS,tag);if(attrs)for(const[k,v]of Object.entries(attrs))if(v!=null)el.setAttribute(k,v);for(const c of kids.flat()){if(c==null)continue;el.append(c instanceof Node?c:document.createTextNode(String(c)))}return el}
+function icon(d){return s("svg",{viewBox:"0 0 24 24",fill:"none",stroke:"currentColor","stroke-width":"1.8","stroke-linecap":"round","stroke-linejoin":"round","aria-hidden":"true"},...d.split("|").map(p=>s("path",{d:p})))}
+const IC={home:"M3 11l9-7 9 7|M5 10v10h14V10",list:"M8 6h13|M8 12h13|M8 18h13|M3 6h.01|M3 12h.01|M3 18h.01",chart:"M3 3v18h18|M7 15l4-4 3 3 5-6",leaf:"M12 21c-4-3-7-6-7-11a7 7 0 0 1 14 0c0 5-3 8-7 11z|M12 21V9",gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z|M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
+  face:"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z|M8 14s1.5 2 4 2 4-2 4-2|M9 9h.01|M15 9h.01",bolt:"M13 2L4 14h7l-1 8 9-12h-7z",chat:"M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.5A8 8 0 1 1 21 12z",heart:"M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z",help:"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z|M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3|M12 17h.01"};
+const pad2=n=>String(n).padStart(2,"0");
+const diaLocal=d=>d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+const hora=iso=>{const d=new Date(iso);return pad2(d.getHours())+":"+pad2(d.getMinutes())};
+const DIAS=["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+const MESES=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+function nomeDia(dia){const[y,m,d]=dia.split("-").map(Number);const dt=new Date(y,m-1,d);const hoje=diaLocal(new Date());const ont=diaLocal(new Date(Date.now()-864e5));
+  if(dia===hoje)return"Hoje";if(dia===ont)return"Ontem";return DIAS[dt.getDay()][0].toUpperCase()+DIAS[dt.getDay()].slice(1)+", "+d+" de "+MESES[m-1]}
+function haQuanto(iso){const m=Math.round((Date.now()-new Date(iso))/6e4);if(m<1)return"agora";if(m<60)return"há "+m+" min";const hh=Math.round(m/60);if(hh<24)return"há "+hh+" h";const d=Math.round(hh/24);return"há "+d+(d===1?" dia":" dias")}
+
+/* ---------- conteúdo clínico (escalas e opções) ---------- */
+const HUMOR=[
+ {v:3,label:"Muito acelerada",d:"pensamentos correndo, pouco sono e muita energia",c:"--m3"},
+ {v:2,label:"Acelerada",d:"mais agitada ou eufórica do que o normal",c:"--m2"},
+ {v:1,label:"Um pouco acelerada",d:"animada, falante, com muitas ideias",c:"--m1"},
+ {v:0,label:"Estável",d:"me sinto como eu mesma",c:"--m0"},
+ {v:-1,label:"Um pouco para baixo",d:"desanimada, mas dou conta do dia",c:"--m-1"},
+ {v:-2,label:"Para baixo",d:"difícil fazer as coisas, tudo pesa",c:"--m-2"},
+ {v:-3,label:"Muito para baixo",d:"quase não consigo funcionar",c:"--m-3"}];
+const humorDe=v=>HUMOR.find(x=>x.v===v);
+const ENERGIA=["Sem energia","Pouca","Normal","Muita","Demais"];
+const NIVEL=["Nada","Pouca","Média","Muita","Extrema"];
+const BATERIA=["Vazia","Baixa","Média","Boa","Cheia"];
+const REMEDIO=[{v:"sim",l:"Tomei tudo"},{v:"parcial",l:"Tomei parte"},{v:"nao",l:"Esqueci / não tomei"},{v:"na",l:"Não se aplica hoje"}];
+const SONOQ=["Ruim","Mais ou menos","Bom"];
+const CORPO_CHECK=["Dor de cabeça","Cólica","Dor no corpo","Enjoo","Sem fome","Fome demais","Cansaço físico","Tensão muscular","Tudo bem no corpo"];
+const GATILHOS={
+ "Sensorial":["Barulho","Luz forte","Cheiro","Toque, roupa ou textura","Calor ou frio","Muita gente","Muita informação ao mesmo tempo"],
+ "Pessoas":["Conversa difícil","Crítica ou cobrança","Me senti ignorada","Mal-entendido","Muito tempo socializando","Ter que fingir que estava bem"],
+ "Rotina":["Mudança de plano","Imprevisto","Espera ou atraso","Lugar novo","Trocar de uma tarefa para outra"],
+ "Corpo":["Fome ou sede","Dormi mal","Dor","Ciclo menstrual","Cansaço","Efeito do remédio"],
+ "Tarefas":["Trabalho ou estudo","Muitas tarefas","Ter que decidir algo","Prazo apertado"],
+ "Outro":["Não sei o que foi"]};
+const PENSAMENTOS=[
+ {t:"Vai dar tudo errado",p:"Imaginar o pior resultado"},
+ {t:"Estão pensando mal de mim",p:"Tentar adivinhar o que os outros pensam"},
+ {t:"Eu sempre estrago tudo",p:"Um fato vira \"sempre\" ou \"nunca\""},
+ {t:"Eu deveria dar conta",p:"Cobrança do \"deveria\""},
+ {t:"A culpa é minha",p:"Assumir a culpa por tudo"},
+ {t:"Não aguento mais",p:"Sobrecarga: o corpo pode estar pedindo pausa"},
+ {t:"Ninguém me entende",p:"Sensação de isolamento"},
+ {t:"Preciso fazer isso agora",p:"Urgência ou impulso"},
+ {t:"Não veio pensamento, foi só sensação",p:"Isso também é uma resposta válida"}];
+const CORPO_LOCAL=["Cabeça","Rosto ou mandíbula","Garganta","Peito","Barriga","Mãos","Pernas","Corpo todo"];
+const CORPO_SENS=["Aperto","Calor","Tremor","Coração acelerado","Falta de ar","Enjoo","Formigamento","Dormência ou vazio","Inquietação"];
+const EMOCOES=["Tristeza","Raiva","Medo","Ansiedade","Vergonha","Culpa","Frustração","Confusão","Sobrecarga","Vazio","Irritação","Euforia","Alívio","Não sei dar nome"];
+const COMPORT=["Crise (meltdown)","Desliguei (shutdown)","Stimming","Me isolei","Chorei","Gritei ou briguei","Saí do lugar","Não consegui falar","Comi demais ou nada","Gastei por impulso","Fiz algo arriscado","Fiquei sem dormir","Vontade de me machucar","Me acalmei sozinha"];
+const DEPOIS=["Melhorou","Ficou igual","Piorou","Ainda não sei"];
+const AJUDOU=["Fone ou silêncio","Lugar escuro ou calmo","Coberta pesada ou pressão","Ficar sozinha","Conversar com alguém","Abraço","Música","Respirar devagar","Stim seguro","Água ou comida","Banho","Descansar ou dormir","Caminhar ou me mexer","Remédio de resgate (SOS)","Nada ajudou ainda"];
+const SEGURANCA=[{v:0,l:"Não"},{v:1,l:"Passou pela cabeça"},{v:2,l:"Sim, com força"}];
+const AVISOS=["Estou sobrecarregada. Não consigo falar agora.","Preciso de silêncio, por favor.","Por favor, não me toque agora.","Preciso de um abraço apertado.","Preciso ficar um tempo sozinha.","Pode ficar perto de mim, sem falar?","Estou bem, só cansada.","Pode falar mais devagar e com poucas palavras?"];
+const PEDIDOS=["Pode me ligar?","Vem pra cá, sem precisar falar nada.","Me traz algo para comer?","Me busca, por favor.","Pode cancelar ou adiar meu compromisso?","Me manda uma mensagem de carinho.","Preciso de ajuda agora."];
+const SOCIAIS=["Oi! Estou ocupada agora, já já te retorno.","Vi sua mensagem. Te respondo assim que puder.","Hoje não estou conseguindo conversar. Te respondo outro dia, tudo bem?","Prefiro conversar por mensagem em vez de ligação. Pode me escrever?","Obrigada pelo convite! Hoje não vou conseguir ir.","Pode me mandar por escrito? Assim consigo me organizar melhor.","Estou um pouco cansada hoje. Falo com você depois."];
+const RESPOSTAS=["Recebi. Estou indo.","Recebi. Já te ligo.","Recebi. Te dou espaço.","Recebi. Estou com você."];
+
+/* ---------- acesso por código ---------- */
+const PERFIS={};
+async function hashCodigo(c){const b=new TextEncoder().encode("abc-diario:"+c);const d=await crypto.subtle.digest("SHA-256",b);return[...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+
+/* ---------- estado ---------- */
+const S={perfil:null,legado:false,usuario:null,pronto:false,view:"inicio",entries:[],recados:[],avisos:[],compras:[],config:{},configOk:false,dbState:"carregando",
+  flow:null,expanded:null,confirmDel:null,pin:"",pinErro:false,toast:"",periodo:30,filtro:"todos",recado:"",cfgDraft:null,big:null,breath:null,
+  lg:null,conta:null,contaForm:{},codigoRec:null,aberto:false,pinOcupado:false,pinLegado:null};
+let pendente=false,breathTimer=null;
+const prefs={grande:ls.get("grande",false),calmo:ls.get("calmo",false)};
+function aplicarPrefs(){document.documentElement.classList.toggle("grande",!!prefs.grande);document.documentElement.classList.toggle("calmo",!!prefs.calmo||matchMedia("(prefers-reduced-motion: reduce)").matches)}
+aplicarPrefs();
+const nomeEla=()=>(S.config.nomeEla||"").trim()||"você";
+const nomeEla3=()=>(S.config.nomeEla||"").trim()||"Ela";
+function novoLg(aba){return{aba:aba||"entrar",convite:"",velho:"",u:"",c:"",c2:"",ca:"",rec:"",emNome:"",emNum:"",erro:"",ocupado:false,prog:"",temaMexido:S.lg?S.lg.temaMexido:false}}
+S.lg=novoLg();
+
+/* ---------- tema (cor e aparência) ---------- */
+const CORES=[
+ {k:"mar",n:"Verde-água",l:["#2D6A6F","#D3E6E6","#FFFFFF"],d:["#6FB3B5","#1E3A3C","#0E1A1B"]},
+ {k:"azul",n:"Azul",l:["#2F5E9E","#DCE6F4","#FFFFFF"],d:["#8DB1E6","#1F2E44","#0E1726"]},
+ {k:"lavanda",n:"Lavanda",l:["#6A4C9C","#E8E0F4","#FFFFFF"],d:["#B9A3E3","#2E2540","#17112A"]},
+ {k:"rosa",n:"Rosa",l:["#A8476E","#F5DDE7","#FFFFFF"],d:["#E79BBB","#3F2230","#2A0F1C"]},
+ {k:"verde",n:"Verde",l:["#3F6E3A","#DDEAD8","#FFFFFF"],d:["#97C98E","#22361F","#0F1D0D"]},
+ {k:"bordo",n:"Bordô",l:["#7A2E3B","#F1DDE0","#FFFFFF"],d:["#D99AA5","#3A1E24","#22090F"]},
+ {k:"terracota",n:"Terracota",l:["#A0522D","#F4E1D6","#FFFFFF"],d:["#E3A37E","#3D2619","#24130A"]},
+ {k:"grafite",n:"Grafite",l:["#4A5560","#E1E5E9","#FFFFFF"],d:["#B4BEC7","#2A3138","#14191E"]}];
+const MODOS=[{k:"auto",n:"Automático"},{k:"claro",n:"Claro"},{k:"escuro",n:"Escuro"}];
+let tema=Object.assign({cor:"mar",modo:"auto"},ls.get("tema",{}));
+const temaHost=document.documentElement.getAttribute("data-theme");
+const temaEl=document.createElement("style");app.before(temaEl);
+function aplicarTema(){const c=CORES.find(x=>x.k===tema.cor)||CORES[0];
+  const v=a=>"--accent:"+a[0]+";--accent-soft:"+a[1]+";--accent-fg:"+a[2];
+  temaEl.textContent=":root{"+v(c.l)+"}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]){"+v(c.d)+"}}:root[data-theme=\"dark\"]{"+v(c.d)+"}";
+  const r=document.documentElement;
+  if(tema.modo==="claro")r.setAttribute("data-theme","light");else if(tema.modo==="escuro")r.setAttribute("data-theme","dark");
+  else if(temaHost)r.setAttribute("data-theme",temaHost);else r.removeAttribute("data-theme")}
+aplicarTema();
+function temaEscuro(){const a=document.documentElement.getAttribute("data-theme");return a==="dark"||(a!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches)}
+function mudarTema(patch){tema=Object.assign({},tema,patch);ls.set("tema",tema);aplicarTema();render(true)}
+function seletorTema(onMuda){const escuro=temaEscuro();const atual=CORES.find(x=>x.k===tema.cor)||CORES[0];
+  return h("div",{class:"stack",style:"gap:10px"},
+    h("div",{class:"swatches",role:"group","aria-label":"Cor do app"},CORES.map(c=>h("button",{type:"button",class:"swatch","aria-pressed":atual.k===c.k?"true":"false","aria-label":c.n,title:c.n,
+      style:"background:"+(escuro?c.d[0]:c.l[0]),onclick:()=>onMuda({cor:c.k})}))),
+    h("p",{class:"small muted",style:"text-align:center",text:"Cor: "+atual.n}),
+    h("div",{style:"display:flex;justify-content:center"},chips(MODOS.map(m=>m.n),(MODOS.find(m=>m.k===tema.modo)||MODOS[0]).n,t=>onMuda({modo:MODOS.find(m=>m.n===t).k}),false)))}
+async function salvarTemaConta(){if(!BD.key||!db||!S.perfil)return;const temas=Object.assign({},S.config.temas||{});temas[S.perfil]={cor:tema.cor,modo:tema.modo};
+  try{await salvarConfig({temas})}catch(e){}}
+
+/* ---------- criptografia (os registros saem do aparelho já embaralhados) ---------- */
+const ITER=250000;const te=new TextEncoder(),td=new TextDecoder();
+const b64=u=>{let s="";const a=new Uint8Array(u);for(let i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)};
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const aleat=n=>crypto.getRandomValues(new Uint8Array(n));
+const hex=u=>[...u].map(x=>x.toString(16).padStart(2,"0")).join("");
+async function kek(senha,salt,iter){const base=await crypto.subtle.importKey("raw",te.encode(senha),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+async function embrulhar(raw,senha){const salt=aleat(16),iv=aleat(12);const k=await kek(senha,salt,ITER);
+  const c=await crypto.subtle.encrypt({name:"AES-GCM",iv},k,raw);return{salt:b64(salt),iv:b64(iv),it:ITER,c:b64(c)}}
+async function desembrulhar(w,senha){if(!w||!w.c)return null;try{const k=await kek(senha,unb64(w.salt),w.it||ITER);
+  return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(w.iv)},k,unb64(w.c)))}catch(e){return null}}
+const chaveDe=raw=>crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},false,["encrypt","decrypt"]);
+async function cifrar(obj,key){const iv=aleat(12);const c=await crypto.subtle.encrypt({name:"AES-GCM",iv},key||BD.key,te.encode(JSON.stringify(obj)));return{iv:b64(iv),c:b64(c)}}
+async function decifrar(d,key){const p=await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(d.iv)},key||BD.key,unb64(d.c));return JSON.parse(td.decode(p))}
+const ALFA="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+function gerarCodigo(){const a=aleat(16);let s="";for(let i=0;i<16;i++){s+=ALFA[a[i]%32];if(i%4===3&&i<15)s+="-"}return s}
+const normCodigo=c=>String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+const normUser=u=>String(u||"").trim().toLowerCase();
+const userOk=u=>/^[a-z0-9][a-z0-9._-]{2,29}$/.test(u);
+
+/* ---------- servidor (Supabase) ---------- */
+const CFG=window.ABC_CONFIG||{};
+const temServidor=!!(CFG.url&&CFG.chave);
+async function rpc(fn,args){
+  const cab={apikey:CFG.chave,"Content-Type":"application/json"};if(String(CFG.chave).startsWith("eyJ"))cab.Authorization="Bearer "+CFG.chave;
+  const r=await fetch(CFG.url.replace(/\/+$/,"")+"/rest/v1/rpc/"+fn,{method:"POST",headers:cab,body:JSON.stringify(args||{})});
+  const t=await r.text();if(!r.ok){const e=new Error("rpc "+fn+" "+r.status);e.corpo=t;throw e}return t?JSON.parse(t):null}
+const sha=async t=>hex(new Uint8Array(await crypto.subtle.digest("SHA-256",te.encode(t))));
+async function tokenDe(raw){const k=await crypto.subtle.importKey("raw",raw,{name:"HMAC",hash:"SHA-256"},false,["sign"]);
+  return hex(new Uint8Array(await crypto.subtle.sign("HMAC",k,te.encode("abc-escrita"))))}
+const hashRec=rec=>sha("abc-rec:"+normCodigo(rec));
+
+/* ---------- diário aberto ---------- */
+let ger=0,timerSync=null;
+const BD={diario:null,token:null,key:null,raw:null};
+const db=temServidor?{}:null; // compatibilidade com verificações antigas
+let dbPronto=true;
+if(!temServidor)S.dbState="indisponivel";
+(async function(){
+  const ss=ls.get("sessao",null);
+  if(ss&&ss.k&&ss.d){try{BD.raw=unb64(ss.k);BD.key=await chaveDe(BD.raw);BD.token=await tokenDe(BD.raw);BD.diario=ss.d;S.usuario=ss.u;S.perfil=ss.p;S.conta=ss.conta||null}
+    catch(e){ls.del("sessao");BD.key=null;BD.diario=null}}
+  S.pronto=true;if(S.perfil)abrirDiario();
+  const q=new URLSearchParams(location.search);if(q.get("abrir")==="checkin"){history.replaceState(null,"",location.pathname);if(S.perfil==="ela")S.abrirCheckin=true}
+  render(true);
+})();
+async function lerCol(col,lim){const l=await rpc("abc_ler",{diario:BD.diario,token:BD.token,col,lim})||[];const out=[];
+  for(const x of l){try{out.push(Object.assign({id:x.id},await decifrar(x.data,BD.key)))}catch(e){}}return out}
+async function sincronizar(){if(!BD.diario||!temServidor)return;const g=ger;
+  try{const [r,rc,av,cf,cp]=await Promise.all([lerCol("registros",1000),lerCol("recados",200),lerCol("avisos",100),lerCol("config",1),lerCol("compras",300)]);
+    if(g!==ger)return;S.entries=r;S.recados=rc;S.avisos=av;S.compras=cp;espelharCompras();const primeira=!S.configOk;S.config=(cf[0]||{});delete S.config.id;S.configOk=true;S.dbState="ok";
+    if(primeira){S.contaForm={};aposConfig()}
+    if(S.abrirCheckin){S.abrirCheckin=false;if(!S.flow)iniciarFlow("checkin")}
+    render()}
+  catch(e){if(g===ger){S.dbState=S.dbState==="ok"?"ok":"erro";render()}}}
+function abrirDiario(){if(S.aberto||!BD.diario)return;S.aberto=true;ger++;S.dbState="carregando";
+  const g=ger;setTimeout(()=>{if(g===ger&&S.dbState==="carregando"){S.dbState="lento";render()}},10000);
+  sincronizar();clearInterval(timerSync);timerSync=setInterval(()=>{if(document.visibilityState==="visible")sincronizar()},20000)}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&S.aberto)sincronizar()});
+function fecharDiario(){ger++;clearInterval(timerSync);S.aberto=false;
+  S.entries=[];S.recados=[];S.avisos=[];S.compras=[];S.config={};S.configOk=false;S.dbState=temServidor?"carregando":"indisponivel"}
+function aposConfig(){const patch={};const t=(S.config.temas||{})[S.perfil];
+  if(S.temaDoLogin){S.temaDoLogin=false;const temas=Object.assign({},S.config.temas||{});temas[S.perfil]={cor:tema.cor,modo:tema.modo};patch.temas=temas}
+  else if(t&&(t.cor!==tema.cor||t.modo!==tema.modo)){tema=Object.assign({cor:"mar",modo:"auto"},t);ls.set("tema",tema);aplicarTema()}
+  if(S.emergenciaPendente){Object.assign(patch,S.emergenciaPendente);S.emergenciaPendente=null}
+  if(Object.keys(patch).length)setTimeout(()=>salvarConfig(patch).catch(()=>{}),0)}
+const lista={registros:"entries",recados:"recados",avisos:"avisos",compras:"compras"};
+async function gravar(col,id,obj){await rpc("abc_gravar",{diario:BD.diario,token:BD.token,col,id,data:Object.assign({criadoEm:obj.criadoEm||null},await cifrar(obj))})}
+async function salvar(col,dados){if(!BD.diario)throw new Error("sem diário");const id=hex(aleat(10));await gravar(col,id,dados);
+  const k=lista[col];if(k){S[k]=[Object.assign({id},dados),...S[k]];render()}setTimeout(sincronizar,300);return{id}}
+async function atualizar(col,item,patch){const o=Object.assign({},item,patch);delete o.id;await gravar(col,item.id,o);
+  const k=lista[col];if(k){S[k]=S[k].map(x=>x.id===item.id?Object.assign({id:item.id},o):x);render()}}
+async function apagarDoc(col,id){await rpc("abc_apagar",{diario:BD.diario,token:BD.token,col,id});const k=lista[col];if(k){S[k]=S[k].filter(x=>x.id!==id);render()}}
+async function salvarConfig(patch){const o=Object.assign({},S.config,patch);delete o.id;await gravar("config","geral",o);S.config=o}
+
+/* ---------- contas (cadastro com convite; entrada só com o código) ---------- */
+const CODMIN=6;
+const codOk=c=>new RegExp("^\\d{"+CODMIN+",30}$").test(c||"");
+const ehLegado=async()=>false;
+function erroCom(msg){const e=new Error(msg);e.msg=msg;return e}
+const MSG_BLOQ="Muitas tentativas erradas. Por segurança, espere 15 minutos e tente de novo.";
+async function novaConta(convite,u,cod,codAcomp){
+  const raw=aleat(32),d=hex(aleat(16)),rec=gerarCodigo();const token=await tokenDe(raw);
+  const hD=await hashCodigo(cod),hA=codAcomp?await hashCodigo(codAcomp):null;
+  const conta={v:3,diario:d,criadoEm:new Date().toISOString(),dono:await embrulhar(raw,cod),hDono:hD,acomp:codAcomp?await embrulhar(raw,codAcomp):null,hAcomp:hA,
+    rec:await embrulhar(raw,normCodigo(rec)),hRec:await hashRec(rec)};
+  const r=await rpc("abc_criar_conta",{convite,u,conta,h_dono:hD,h_acomp:hA,token_hash:await sha(token)});
+  const erros={convite:"Código de convite errado. Peça o convite para quem cuida do app.",usuario:"Esse login já existe. Escolha outro.",codigo:"Esse código já está em uso. Escolha outro.",
+    codigo_acomp:"O código de quem acompanha já está em uso. Escolha outro.",usuario_invalido:"Login inválido.",bloqueado:MSG_BLOQ};
+  if(r!=="ok")throw erroCom(erros[r]||"Não consegui criar o cadastro.");
+  return{raw,d,rec,conta}}
+async function iniciarSessao(u,d,raw,p,conta){fecharDiario();BD.raw=raw;BD.key=await chaveDe(raw);BD.token=await tokenDe(raw);BD.diario=d;
+  S.usuario=u;S.perfil=p;S.legado=false;S.conta=conta||null;ls.set("sessao",{u,d,p,k:b64(raw),conta:S.conta});
+  S.temaDoLogin=!!(S.lg&&S.lg.temaMexido);S.lg=novoLg();S.lg.temaMexido=false;S.view="inicio";S.pin="";abrirDiario()}
+function guardarConta(c){S.conta=c;const ss=ls.get("sessao",null);if(ss){ss.conta=c;ls.set("sessao",ss)}}
+function sair(){idbSet("compras",[]);desligarTudo();fecharDiario();ls.del("sessao");BD.key=null;BD.raw=null;BD.token=null;BD.diario=null;S.perfil=null;S.usuario=null;S.conta=null;S.view="inicio";S.codigoRec=null;S.pin="";S.lg=novoLg();render(true)}
+const SEM_DB="O app ainda não foi ligado ao banco de dados.";
+function validarCadastro(L){const u=normUser(L.u);
+  if(!(L.convite||"").trim())return"Digite o código de convite.";
+  if(!userOk(u))return"Login: use de 3 a 30 letras ou números, sem espaço nem acento. Pode usar ponto, hífen ou _.";
+  if(!codOk(L.c))return"O código precisa ter só números, com pelo menos "+CODMIN+".";
+  if(L.c!==L.c2)return"Os dois códigos estão diferentes.";
+  if(L.ca&&!codOk(L.ca))return"O código de quem acompanha precisa ter só números, com pelo menos "+CODMIN+".";
+  if(L.ca&&L.ca===L.c)return"O código de quem acompanha precisa ser diferente do seu.";
+  return null}
+function emergenciaDoForm(L){const num=(L.emNum||"").replace(/[^\d+ ()-]/g,"").slice(0,25).trim();if(!num)return null;return{emergenciaNome:(L.emNome||"").trim().slice(0,40),emergenciaNumero:num}}
+async function entrarComCodigo(){const cod=S.pin;if(!cod)return;
+  if(cod.length<CODMIN){S.pinErro="O código tem pelo menos "+CODMIN+" números.";S.pin="";return render(true)}
+  if(!temServidor){S.pinErro=SEM_DB;return render(true)}
+  S.pinOcupado=true;S.pinErro=false;render(true);
+  try{const r=await rpc("abc_entrar",{h:await hashCodigo(cod)});
+    if(r&&r.erro==="bloqueado")S.pinErro=MSG_BLOQ;
+    else if(!r||r.erro)S.pinErro="Código não reconhecido. Tente de novo.";
+    else{const p=r.p==="parceiro"?"parceiro":"ela";const raw=await desembrulhar(p==="parceiro"?r.conta.acomp:r.conta.dono,cod);
+      if(!raw)S.pinErro="Código não reconhecido. Tente de novo.";else await iniciarSessao(r.u,r.conta.diario,raw,p,r.conta)}}
+  catch(e){S.pinErro="Não consegui conectar. Confira a internet e tente de novo."}
+  S.pin="";S.pinOcupado=false;render(true)}
+async function cadastrar(){const L=S.lg;const erro=validarCadastro(L);if(erro){L.erro=erro;return render(true)}
+  if(!temServidor){L.erro=SEM_DB;return render(true)}
+  L.ocupado=true;L.erro="";L.prog=S.importado?"Criando o cadastro…":"";render(true);const u=normUser(L.u);const em=emergenciaDoForm(L);
+  try{const {raw,d,rec,conta}=await novaConta(L.convite,u,L.c,L.ca||null);
+    BD.key=await chaveDe(raw);BD.token=await tokenDe(raw);BD.diario=d;
+    if(S.importado){const I=S.importado;const grupos=[["registros",I.registros||[]],["recados",I.recados||[]],["avisos",I.avisos||[]]];
+      const total=grupos.reduce((a,g)=>a+g[1].length,0);let feitos=0;
+      for(const[col,l]of grupos)for(const o of l){const x=Object.assign({},o);const id=String(x.id||hex(aleat(10))).replace(/[^A-Za-z0-9_-]/g,"").slice(0,40)||hex(aleat(10));delete x.id;
+        await gravar(col,id,x);feitos++;if(feitos%5===0||feitos===total){L.prog="Levando registros: "+feitos+" de "+total;render(true)}}
+      const cfg=Object.assign({},I.config||{});delete cfg.migrado;if(em)Object.assign(cfg,em);cfg.temas={ela:{cor:tema.cor,modo:tema.modo}};
+      await gravar("config","geral",cfg);S.importado=null;toast("Pronto! "+total+" registros vieram do app antigo.")}
+    else{S.emergenciaPendente=em;L.temaMexido=true}
+    S.codigoRec=rec;await iniciarSessao(u,d,raw,"ela",conta)}
+  catch(e){L.erro=e.msg||"Não consegui criar o cadastro. Confira a internet e tente de novo.";L.ocupado=false;L.prog=""}
+  render(true)}
+async function recuperar(){const L=S.lg;const u=normUser(L.u);
+  if(!u||!L.rec){L.erro="Preencha o login e o código de recuperação.";return render(true)}
+  if(!codOk(L.c)){L.erro="O novo código precisa ter só números, com pelo menos "+CODMIN+".";return render(true)}
+  if(L.c!==L.c2){L.erro="Os dois códigos estão diferentes.";return render(true)}
+  L.ocupado=true;L.erro="";render(true);
+  try{const r=await rpc("abc_recuperar",{u,hr:await hashRec(L.rec)});
+    if(r&&r.erro==="bloqueado")throw erroCom(MSG_BLOQ);
+    const raw=r&&r.conta?await desembrulhar(r.conta.rec,normCodigo(L.rec)):null;
+    if(!raw)throw erroCom("Login ou código de recuperação não conferem.");
+    BD.token=await tokenDe(raw);const patch=await trocarCodigoConta(u,r.conta,"dono",L.c,raw,BD.token);
+    await iniciarSessao(u,r.conta.diario,raw,"ela",Object.assign({},r.conta,patch));toast("Código trocado. Você já entrou.")}
+  catch(e){L.erro=e.msg||"Não consegui conectar. Confira a internet e tente de novo.";L.ocupado=false}
+  render(true)}
+async function trocarCodigoConta(u,c,tipo,novo,raw,token){
+  const hN=await hashCodigo(novo);const hK=tipo==="dono"?"hDono":"hAcomp";
+  const patch={};patch[tipo]=await embrulhar(raw,novo);patch[hK]=hN;
+  const r=await rpc("abc_atualizar_conta",{u,token,patch,h_novo:hN,p_novo:tipo==="dono"?"ela":"parceiro",h_velho:c[hK]||null});
+  if(r==="codigo")throw erroCom("Esse código já está em uso. Escolha outro.");
+  if(r!=="ok")throw erroCom("Não consegui salvar. Tente de novo.");
+  return patch}
+async function trocarCodigo(tipo){const F=S.contaForm;const novo=tipo==="dono"?F.nova:F.acomp;
+  if(!codOk(novo)){F.msg="O código precisa ter só números, com pelo menos "+CODMIN+".";return render(true)}
+  if(tipo==="dono"&&F.nova!==F.nova2){F.msg="Os dois códigos estão diferentes.";return render(true)}
+  const c=S.conta||{};const outro=tipo==="dono"?c.hAcomp:c.hDono;
+  if(outro&&outro===await hashCodigo(novo)){F.msg="Use um código diferente do outro acesso.";return render(true)}
+  F.ocupado=true;F.msg="";render(true);
+  try{const patch=await trocarCodigoConta(S.usuario,c,tipo,novo,BD.raw,BD.token);
+    guardarConta(Object.assign({},c,patch));S.contaForm={};toast(tipo==="dono"?"Seu código foi trocado.":"Código de quem acompanha salvo.")}
+  catch(e){F.ocupado=false;F.msg=e.msg||"Não consegui salvar. Tente de novo."}
+  render(true)}
+async function removerAcomp(){const c=S.conta||{};
+  try{const r=await rpc("abc_atualizar_conta",{u:S.usuario,token:BD.token,patch:{acomp:null,hAcomp:null},h_novo:null,p_novo:null,h_velho:c.hAcomp||null});
+    if(r!=="ok")throw 0;guardarConta(Object.assign({},c,{acomp:null,hAcomp:null}));S.contaForm={};toast("Acesso de quem acompanha removido.")}
+  catch(e){toast("Não consegui remover.")}render(true)}
+async function apagarLegado(){}
+
+/* ---------- lembrete do check-in (notificação no celular) ---------- */
+const pushOk=()=>"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;
+const ehIOS=()=>/iPhone|iPad|iPod/.test(navigator.userAgent);
+const instalado=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+let swReg=null;
+if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").then(r=>{swReg=r}).catch(()=>{})}
+const urlB64=s=>{const p="=".repeat((4-s.length%4)%4);return unb64((s+p).replace(/-/g,"+").replace(/_/g,"/"))};
+async function inscrever(){
+  if(!pushOk())throw erroCom("Este aparelho não aceita notificações por aqui.");
+  const perm=await Notification.requestPermission();if(perm!=="granted")throw erroCom("As notificações foram bloqueadas. Libere nas configurações do celular para este app.");
+  const vapid=await rpc("abc_vapid",{});if(!vapid)throw erroCom("O servidor de avisos ainda está sendo ligado. Tente de novo daqui a 15 minutos.");
+  const reg=swReg||await navigator.serviceWorker.ready;
+  let sub=await reg.pushManager.getSubscription();if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64(vapid)});return sub}
+async function registrarAparelho(hora){const sub=await inscrever();const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||"America/Sao_Paulo";
+  const r=await rpc("abc_lembrete_salvar",{endpoint:sub.endpoint,sub:sub.toJSON(),hora,tz});if(r!=="ok")throw erroCom("Não consegui salvar o aviso.");return sub}
+const horaCheckin=()=>{const L=ls.get("lembrete",{})||{};return L.on?L.hora:null};
+async function ligarLembrete(hora){ls.set("lembrete",{on:true,hora});try{await registrarAparelho(hora)}catch(e){ls.set("lembrete",{on:false,hora});throw e}await enviarAgenda(true).catch(()=>{})}
+async function largarAparelho(){const sub=await assinaturaAtual();if(sub){await rpc("abc_lembrete_apagar",{endpoint:sub.endpoint}).catch(()=>{});await sub.unsubscribe().catch(()=>{})}ls.del("agendaEnviada")}
+async function desligarLembrete(){const hora=(ls.get("lembrete",{})||{}).hora||"20:00";ls.set("lembrete",{on:false,hora});
+  try{if(ls.get("saidasOn",false))await registrarAparelho(null);else await largarAparelho()}catch(e){}}
+async function ligarSaidas(){ls.set("saidasOn",true);try{await registrarAparelho(horaCheckin())}catch(e){ls.set("saidasOn",false);throw e}await enviarAgenda(true)}
+async function desligarSaidas(){ls.set("saidasOn",false);if(horaCheckin())await enviarAgenda(true).catch(()=>{});else await largarAparelho()}
+function desligarTudo(){const L=ls.get("lembrete",{})||{};ls.set("lembrete",{on:false,hora:L.hora||"20:00"});ls.set("saidasOn",false);largarAparelho().catch(()=>{})}
+/* ---------- compras e saídas de casa ---------- */
+const ITENS_COMUNS=["Pasta de dente","Sabonete","Papel higiênico","Shampoo","Desodorante","Absorvente","Remédio","Água","Comida pronta","Fruta","Leite","Pão","Café","Ração do pet"];
+const DIAS_CURTO=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+function idbSet(k,v){return new Promise(res=>{try{const r=indexedDB.open("abc",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");
+  r.onsuccess=()=>{try{const tx=r.result.transaction("kv","readwrite");tx.objectStore("kv").put(v,k);tx.oncomplete=()=>res();tx.onerror=()=>res()}catch(e){res()}};r.onerror=()=>res()}catch(e){res()}})}
+const pendentes=()=>S.compras.filter(c=>!c.feito);
+function espelharCompras(){idbSet("compras",pendentes().map(c=>String(c.texto||"").slice(0,60)))}
+async function assinaturaAtual(){try{if(!pushOk())return null;const reg=swReg||await navigator.serviceWorker.ready;return await reg.pushManager.getSubscription()}catch(e){return null}}
+async function enviarAgenda(forcar){const sub=await assinaturaAtual();if(!sub)return;const on=!!ls.get("saidasOn",false);const tem=pendentes().length>0;
+  const chave=JSON.stringify([on,tem,on?(S.config.saidas||[]):[]]);if(!forcar&&ls.get("agendaEnviada","")===chave)return;
+  const r=await rpc("abc_lembrete_agenda",{endpoint:sub.endpoint,agenda:on?(S.config.saidas||[]):[],tem_compras:tem});if(r==="ok")ls.set("agendaEnviada",chave)}
+async function comprasMudou(){espelharCompras();try{await enviarAgenda()}catch(e){}}
+async function addCompra(t){t=String(t||"").trim().slice(0,60);if(!t)return;
+  if(pendentes().some(c=>c.texto.toLowerCase()===t.toLowerCase())){toast("Já está na lista.");return}
+  try{await salvar("compras",{texto:t,feito:false,criadoEm:new Date().toISOString(),quem:S.perfil});comprasMudou()}catch(e){toast("Não consegui salvar.")}}
+function telaCompras(){const ela=S.perfil==="ela";const F=S.contaForm;const pend=pendentes(),feitos=S.compras.filter(c=>c.feito).slice(0,8);
+  const inp=h("input",{type:"text",id:"compra-nova",placeholder:"Ex.: pasta de dente",oninput:e=>{F.nova=e.target.value}});inp.value=F.nova||"";
+  const sugest=ITENS_COMUNS.filter(t=>!pend.some(c=>c.texto.toLowerCase()===t.toLowerCase()));
+  const saidas=S.config.saidas||[];if(!F.sd)F.sd={dias:[1,2,3,4,5],sai:"08:00",volta:"18:00"};const sd=F.sd;
+  const tIn=(k,l)=>{const e=h("input",{type:"time",id:"sd-"+k,style:"max-width:9em",oninput:ev=>{sd[k]=ev.target.value}});e.value=sd[k];return h("div",null,h("label",{class:"lbl",for:"sd-"+k,text:l}),e)};
+  const saidasOn=!!ls.get("saidasOn",false);
+  return h("div",{class:"stack",style:"gap:18px"},
+    h("div",{class:"row between"},h("h1",{text:"Compras e saídas"}),h("button",{class:"btn ghost",onclick:()=>go("inicio")},"Voltar")),
+    h("div",{class:"card"},h("h2",{text:"O que está faltando em casa?"}),
+      h("form",{class:"row",style:"flex-wrap:nowrap",onsubmit:async e=>{e.preventDefault();const t=F.nova;F.nova="";await addCompra(t);render(true)}},
+        h("div",{style:"flex:1"},inp),h("button",{class:"btn primary",type:"submit"},"Adicionar")),
+      h("p",{class:"small muted",text:"Ou toque para adicionar:"}),
+      h("div",{class:"chips"},sugest.slice(0,10).map(t=>h("button",{class:"chip",onclick:()=>addCompra(t)},"+ "+t)))),
+    h("div",{class:"card"},h("h2",{text:pend.length?"Falta comprar ("+pend.length+")":"Nada faltando agora"}),
+      pend.length?h("div",{class:"stack",style:"gap:8px"},pend.map(c=>h("button",{class:"opt",onclick:async()=>{try{await atualizar("compras",c,{feito:true,feitoEm:new Date().toISOString()});comprasMudou();toast("Boa! "+c.texto+" comprado.")}catch(e){toast("Não consegui salvar.")}}},
+          h("span",{class:"sw",style:"border:2px solid var(--accent);background:transparent"}),h("span",null,h("b",{text:c.texto}),h("br"),h("span",{class:"small muted",text:"Toque quando comprar"})))))
+        :h("p",{class:"small muted",text:"Quando algo acabar, coloque aqui na hora. O app te lembra quando você sair de casa."}),
+      feitos.length?h("details",null,h("summary",{text:"Comprados ("+feitos.length+")"}),h("ul",{class:"clean"},feitos.map(c=>h("li",{class:"small",text:c.texto}))),
+        h("button",{class:"btn ghost",style:"padding-left:0",onclick:async()=>{for(const c of S.compras.filter(x=>x.feito)){try{await apagarDoc("compras",c.id)}catch(e){}}toast("Lista limpa.")}},"Limpar comprados")):null),
+    ela?h("div",{class:"card"},h("h2",{text:"Quando eu saio de casa"}),
+      h("p",{class:"small muted",text:"Com os horários, o app te avisa: na hora de sair, no meio do caminho e meia hora antes de voltar, com o que falta comprar."}),
+      saidas.length?h("div",{class:"stack",style:"gap:8px"},saidas.map((x,i)=>h("div",{class:"row between",style:"border:1px solid var(--line);border-radius:12px;padding:10px 12px"},
+        h("span",null,h("b",{text:x.dias.map(d=>DIAS_CURTO[d]).join(", ")}),h("br"),h("span",{class:"small",text:"Saio "+x.sai+" · volto "+x.volta})),
+        h("button",{class:"btn ghost",onclick:async()=>{const n=saidas.filter((_,j)=>j!==i);try{await salvarConfig({saidas:n});await enviarAgenda();render(true)}catch(e){toast("Não consegui salvar.")}}},"Apagar")))):null,
+      h("details",{open:!saidas.length||null},h("summary",{text:"Adicionar horário"}),h("div",{class:"stack"},
+        h("p",{class:"lbl",text:"Dias"}),h("div",{class:"chips"},DIAS_CURTO.map((n,d)=>h("button",{class:"chip","aria-pressed":sd.dias.includes(d)?"true":"false",onclick:()=>{toggleIn(sd.dias,d);sd.dias.sort();render(true)}},n))),
+        h("div",{class:"row"},tIn("sai","Saio às"),tIn("volta","Volto às")),
+        h("button",{class:"btn primary",style:"align-self:flex-start",onclick:async()=>{if(!sd.dias.length||!sd.sai||!sd.volta){toast("Escolha os dias e os horários.");return}
+          if(sd.volta<=sd.sai){toast("A volta precisa ser depois da saída.");return}
+          try{await salvarConfig({saidas:[...saidas,{dias:sd.dias.slice(),sai:sd.sai,volta:sd.volta}].slice(0,20)});F.sd=null;await enviarAgenda();toast("Horário salvo.")}catch(e){toast("Não consegui salvar.")}render(true)}},"Salvar horário"))),
+      h("div",{class:"card soft"},h("b",{text:"Avisos neste celular"}),
+        !pushOk()?h("p",{class:"small",text:ehIOS()&&!instalado()?"No iPhone, os avisos só funcionam com o app na Tela de Início: Compartilhar → Adicionar à Tela de Início. Depois abra por esse ícone.":"Este navegador não aceita avisos. Tente no Chrome (Android) ou com o app na Tela de Início (iPhone)."}):
+        h("div",{class:"stack",style:"gap:8px"},h("p",{class:"small",text:saidasOn?"Ligados. Você recebe os avisos nos horários acima.":"Desligados neste celular."}),
+          h("button",{class:saidasOn?"btn":"btn primary",style:"align-self:flex-start",disabled:F.ocupadoS||null,onclick:async()=>{F.ocupadoS=true;render(true);
+            try{if(saidasOn){await desligarSaidas();toast("Avisos de saída desligados.")}else{await ligarSaidas();toast("Avisos de saída ligados.")}}catch(e){toast(e.msg||"Não consegui mudar os avisos.")}
+            F.ocupadoS=false;render(true)}},F.ocupadoS?"Um momento…":saidasOn?"Desligar avisos":"Ligar avisos")))):null);
+}
+async function avisarCheckinFeito(){try{if(!(ls.get("lembrete",{})||{}).on||!pushOk())return;const reg=swReg||await navigator.serviceWorker.ready;
+  const sub=await reg.pushManager.getSubscription();if(sub)await rpc("abc_lembrete_checkin",{endpoint:sub.endpoint,dia:diaLocal(new Date())})}catch(e){}}
+function cardLembrete(){const L=ls.get("lembrete",{on:false,hora:"20:00"})||{on:false,hora:"20:00"};const F=S.contaForm;if(F.hora==null)F.hora=L.hora||"20:00";
+  const corpo=[];
+  if(!pushOk()&&ehIOS()&&!instalado())corpo.push(h("div",{class:"card warn"},h("p",{class:"small",text:"No iPhone, a notificação só funciona com o app na Tela de Início: toque em Compartilhar (o quadrado com a seta) → Adicionar à Tela de Início. Depois abra o app por esse ícone e volte aqui."})));
+  else if(!pushOk())corpo.push(h("p",{class:"small",text:"Este navegador não aceita notificações. Tente abrir o app no Chrome (Android) ou adicionar à Tela de Início (iPhone)."}));
+  else{const inp=h("input",{type:"time",id:"cf-hora",style:"max-width:10em",oninput:e=>{F.hora=e.target.value}});inp.value=F.hora;
+    corpo.push(h("p",{class:"small muted",text:L.on?"Ligado. Você recebe um aviso às "+L.hora+" nos dias em que ainda não fez o check-in.":"Receba um aviso no celular, no horário que escolher, se ainda não tiver feito o check-in do dia."}),
+      h("div",null,h("label",{class:"lbl",for:"cf-hora",text:"Horário"}),inp),
+      h("div",{class:"row"},h("button",{class:"btn primary",disabled:F.ocupadoL||null,onclick:async()=>{F.ocupadoL=true;F.msgL="";render(true);
+          try{await ligarLembrete(F.hora||"20:00");toast("Lembrete ligado para as "+(F.hora||"20:00")+".")}catch(e){F.msgL=e.msg||"Não consegui ligar o lembrete."}F.ocupadoL=false;render(true)}},
+          F.ocupadoL?"Ligando…":L.on?"Salvar horário":"Ligar lembrete"),
+        L.on?h("button",{class:"btn",onclick:async()=>{await desligarLembrete();toast("Lembrete desligado.");render(true)}},"Desligar"):null),
+      F.msgL?h("p",{role:"alert",style:"color:var(--alert);font-weight:700",text:F.msgL}):null,
+      h("p",{class:"small muted",text:"Vale só para este aparelho. O aviso pode chegar até 15 minutos depois do horário."}))}
+  return h("div",{class:"card"},h("h2",{text:"Lembrete do check-in"}),corpo)}
+
+/* ---------- render ---------- */
+function render(force){
+  const ae=document.activeElement;
+  if(!force&&ae&&app.contains(ae)&&(ae.tagName==="TEXTAREA"||(ae.tagName==="INPUT"&&/^(text|password|tel)$/.test(ae.type)))){pendente=true;return}
+  pendente=false;
+  app.replaceChildren(view());
+  overlay.replaceChildren(...[S.big?bigCard():null,S.toast?h("div",{class:"toast",role:"status",text:S.toast}):null].filter(Boolean));
+}
+app.addEventListener("focusout",()=>{if(pendente)setTimeout(()=>render(),50)});
+function go(v){S.view=v;S.expanded=null;S.confirmDel=null;S.cfgDraft=null;S.contaForm={};pararRespiracao();render(true);window.scrollTo(0,0)}
+function toast(t){S.toast=t;render(true);setTimeout(()=>{if(S.toast===t){S.toast="";render(true)}},2600)}
+
+function view(){
+  if(!S.pronto)return h("div",{class:"login"},h("p",{class:"muted",text:"Abrindo…"}));
+  if(!S.perfil)return telaLogin();
+  if(S.codigoRec)return telaCodigoRec();
+  if(S.legado&&S.config.migrado)return telaMigrado();
+  if(S.sos)return telaSOS();
+  if(S.flow)return telaFlow();
+  const ela=S.perfil==="ela";
+  const telas=ela?{inicio:inicioEla,compras:telaCompras,cartoes:telaCartoes,historico:telaHistorico,padroes:telaPadroes,calma:telaCalma,ajustes:telaAjustes}
+                 :{inicio:inicioParceiro,compras:telaCompras,historico:telaHistorico,padroes:telaPadroes,ajudar:telaAjudar,ajustes:telaAjustes};
+  if(ela&&S.legado)telas.migrar=telaMigrar;
+  const f=telas[S.view]||telas.inicio;
+  return h("div",null,h("main",{class:"wrap"},avisoDb(),f()),nav(ela));
+}
+function nav(ela){
+  const itens=ela?[["inicio","Início",IC.home],["historico","Histórico",IC.list],["padroes","Padrões",IC.chart],["calma","Calma",IC.leaf],["ajustes","Ajustes",IC.gear]]
+                 :[["inicio","Início",IC.home],["historico","Histórico",IC.list],["padroes","Padrões",IC.chart],["ajudar","Como ajudar",IC.heart],["ajustes","Ajustes",IC.gear]];
+  return h("nav",{class:"footer nav","aria-label":"Menu"},h("div",{class:"in"},itens.map(([k,l,i])=>h("button",{"aria-current":S.view===k?"page":null,onclick:()=>go(k)},icon(i),l))));
+}
+function avisoDb(){
+  if(S.dbState==="indisponivel")return h("div",{class:"card warn"},h("b",{text:"O app ainda não foi ligado ao banco de dados."}));
+  if(S.dbState==="lento")return h("div",{class:"card soft"},h("p",{class:"small",text:"Ainda carregando os registros. Se a internet estiver lenta, isso pode demorar um pouco."}));
+  if(S.dbState==="erro")return h("div",{class:"card warn"},h("p",{class:"small",text:"Sem conexão com os registros agora. Confira a internet; o app tenta de novo sozinho."}));
+  return null;
+}
+
+/* ---------- entrada: código, cadastro, recuperar ---------- */
+function campoLg(k,label,type,ac,extra){const el=h("input",Object.assign({id:"lg-"+k,type,autocomplete:ac,autocapitalize:"none",autocorrect:"off",spellcheck:"false",oninput:e=>{S.lg[k]=e.target.value}},extra||{}));
+  el.value=S.lg[k]||"";return h("div",{style:"text-align:left"},h("label",{class:"lbl",for:"lg-"+k,text:label}),el)}
+const campoCod=(k,label,ph)=>campoLg(k,label,"password","new-password",{inputmode:"numeric",pattern:"[0-9]*",placeholder:ph||"Só números, pelo menos 6"});
+function cardTema(){return h("div",{class:"card",style:"text-align:left"},h("b",{text:"Escolha a cor do app"}),
+  seletorTema(p=>{S.lg.temaMexido=true;mudarTema(p)}),
+  h("p",{class:"small muted",text:"Dá para mudar depois em Ajustes."}))}
+function irPara(aba){const tm=S.lg.temaMexido;S.lg=novoLg(aba);S.lg.temaMexido=tm;S.pin="";S.pinErro=false;render(true);window.scrollTo(0,0)}
+function telaLogin(){const L=S.lg;
+  if(L.aba==="importar")return telaImportar();
+  if(L.aba==="criar"||L.aba==="esqueci")return telaCadastro();
+  const digitos=[1,2,3,4,5,6,7,8,9];
+  const tecla=d=>{if(S.pinOcupado||S.pin.length>=20)return;S.pin+=d;S.pinErro=false;render(true)};
+  const n=S.pin.length;
+  return h("div",{class:"login"},
+    h("div",{class:"stack"},h("h1",{text:"Diário ABC"}),h("p",{class:"muted",text:"Digite seu código."})),
+    h("div",{class:"pin-dots","aria-label":n+" números digitados",style:"flex-wrap:wrap;min-height:20px"},n?Array.from({length:n},()=>h("i",{class:"on"})):[0,1,2,3].map(()=>h("i"))),
+    S.pinErro?h("p",{role:"alert",style:"color:var(--alert);font-weight:700",text:S.pinErro}):h("p",{class:"small muted",text:S.pinOcupado?"Entrando…":"Fica salvo neste aparelho até você sair."}),
+    h("div",{class:"pad"},digitos.map(d=>h("button",{onclick:()=>tecla(d),"aria-label":String(d)},String(d))),
+      h("button",{onclick:()=>{S.pin=S.pin.slice(0,-1);render(true)},"aria-label":"Apagar último número",style:"font-size:1em"},"Apagar"),
+      h("button",{onclick:()=>tecla(0),"aria-label":"0"},"0"),
+      h("button",{class:"ok",onclick:entrarComCodigo,disabled:(!n||S.pinOcupado)||null,"aria-label":"Entrar",style:"font-size:1em"},"Entrar")),
+    h("div",{class:"card",style:"text-align:left"},h("b",{text:"Primeira vez aqui?"}),
+      h("p",{class:"small muted",text:"Faça seu cadastro uma vez só, com o código de convite que te passaram. Depois você entra só com o seu código."}),
+      h("button",{class:"btn primary",style:"align-self:flex-start",onclick:()=>irPara("criar")},"Fazer cadastro")),
+    h("button",{type:"button",class:"linkbtn",onclick:()=>irPara("esqueci")},"Esqueci meu código"));
+}
+/* ---------- trazer registros do app antigo (link gerado lá) ---------- */
+async function abrirPacote(pac,cod){const o=JSON.parse(td.decode(urlB64(pac)));
+  const k=await kek(cod,unb64(o.s),o.it||ITER);let bytes=new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(o.i)},k,unb64(o.c)));
+  if(o.z){const st=new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));bytes=new Uint8Array(await new Response(st).arrayBuffer())}
+  return JSON.parse(td.decode(bytes))}
+function telaImportar(){const L=S.lg;
+  return h("div",{class:"login",style:"justify-content:flex-start"},
+    h("h1",{text:"Trazer meus registros"}),
+    h("p",{class:"muted",text:"Digite o código que você usava no app antigo. Ele abre o pacote com os seus registros, aqui mesmo no celular."}),
+    h("form",{class:"stack",onsubmit:async e=>{e.preventDefault();if(L.ocupado)return;L.ocupado=true;L.erro="";render(true);
+        try{const dados=await abrirPacote(S.pacoteImport,L.velho);S.importado=dados;const cod=L.velho;const tm=L.temaMexido;
+          S.lg=novoLg("criar");S.lg.temaMexido=tm;S.lg.u=dados.u||"";if(codOk(cod)){S.lg.c=cod;S.lg.c2=cod}}
+        catch(x){L.erro="Esse código não abriu o pacote. Confira e tente de novo.";L.ocupado=false}render(true)}},
+      campoCod("velho","Código do app antigo"," "),
+      L.erro?h("p",{role:"alert",style:"color:var(--alert);font-weight:700;text-align:left",text:L.erro}):null,
+      h("button",{class:"btn primary block",type:"submit",disabled:L.ocupado||null},L.ocupado?"Abrindo…":"Abrir meus registros")),
+    h("button",{type:"button",class:"linkbtn",onclick:()=>{S.pacoteImport=null;irPara("entrar")}},"Agora não"));
+}
+function verImport(){if(location.hash.startsWith("#importar=")){S.pacoteImport=location.hash.slice(10);history.replaceState(null,"",location.pathname+location.search);if(S.perfil)sair();S.lg=novoLg("importar");render(true)}}
+verImport();window.addEventListener("hashchange",verImport);
+function telaCadastro(){const L=S.lg;const criar=L.aba==="criar";
+  const erro=L.erro?h("p",{role:"alert",style:"color:var(--alert);font-weight:700;text-align:left",text:L.erro}):null;
+  const semDb=dbPronto&&!db?h("div",{class:"card warn",style:"text-align:left"},h("p",{class:"small",text:SEM_DB})):null;
+  const corpo=criar?h("form",{class:"stack",onsubmit:e=>{e.preventDefault();if(!L.ocupado)cadastrar()}},
+    S.importado?h("div",{class:"card soft",style:"text-align:left"},h("b",{text:"Seus registros do app antigo vão junto"}),
+      h("p",{class:"small",text:((S.importado.registros||[]).length)+" registros, recados e plano. É só completar o cadastro."})):null,
+    campoLg("convite","Código de convite","text","off",{placeholder:"Quem te passou o app tem esse código"}),
+    campoLg("u","Seu login (usuário)","text","username",{placeholder:"Ex.: lu.silva"}),
+    campoCod("c","Crie seu código de entrada"),campoCod("c2","Repita o código"," "),
+    h("p",{class:"small muted",style:"text-align:left",text:"É com esse código que você vai entrar todos os dias."}),
+    h("div",{class:"card soft",style:"text-align:left;gap:12px"},h("b",{text:"Número de emergência (opcional)"}),
+      h("p",{class:"small muted",text:"Alguém de confiança ou sua equipe de saúde. Aparece com um botão de ligar sempre que o app mostrar ajuda."}),
+      campoLg("emNome","Nome","text","off",{placeholder:"Ex.: Mãe, Dra. Ana"}),
+      campoLg("emNum","Número","tel","off",{inputmode:"tel",placeholder:"DDD + número"})),
+    h("details",{class:"card soft",style:"text-align:left"},h("summary",{text:"Código para quem me acompanha (opcional)"}),
+      h("p",{class:"small muted",text:"Se alguém cuida de você, essa pessoa entra com outro código e vê o painel de cuidado. Dá para criar depois em Ajustes."}),
+      campoCod("ca","Código de quem acompanha")),
+    cardTema(),erro,
+    h("button",{class:"btn primary block",type:"submit",disabled:L.ocupado||null},L.ocupado?"Criando cadastro…":"Criar meu cadastro"),
+    h("p",{class:"small muted",style:"text-align:left",text:"Seus registros são embaralhados com o seu código antes de sair do aparelho. No fim você recebe um código de recuperação, para o caso de esquecer o seu."}))
+   :h("form",{class:"stack",onsubmit:e=>{e.preventDefault();if(!L.ocupado)recuperar()}},
+    h("p",{class:"small muted",style:"text-align:left",text:"Use o código de recuperação que apareceu quando você fez o cadastro."}),
+    campoLg("u","Seu login (usuário)","text","username"),campoLg("rec","Código de recuperação","text","off",{placeholder:"XXXX-XXXX-XXXX-XXXX"}),
+    campoCod("c","Novo código de entrada"),campoCod("c2","Repita o novo código"," "),erro,
+    h("button",{class:"btn primary block",type:"submit",disabled:L.ocupado||null},L.ocupado?"Conferindo…":"Trocar código e entrar"));
+  return h("div",{class:"login",style:"justify-content:flex-start"},
+    h("div",{class:"row between"},h("h1",{text:criar?"Cadastro":"Esqueci meu código"}),h("button",{type:"button",class:"btn ghost",onclick:()=>irPara("entrar")},"Voltar")),
+    semDb,corpo);
+}
+document.addEventListener("keydown",e=>{const naPad=!S.perfil&&S.pronto&&S.lg&&S.lg.aba==="entrar";
+  if(naPad&&/^[0-9]$/.test(e.key)){const b=[...app.querySelectorAll(".pad button")].find(x=>x.textContent===e.key);b&&b.click()}
+  if(naPad&&e.key==="Backspace"){S.pin=S.pin.slice(0,-1);render(true)}
+  if(naPad&&e.key==="Enter"&&S.pin){e.preventDefault();entrarComCodigo()}
+  if(e.key==="Escape"&&S.big){S.big=null;render(true)}});
+function telaCodigoRec(){
+  return h("div",{class:"login"},h("h1",{text:"Guarde este código de recuperação"}),
+    h("p",{text:"Se um dia você esquecer seu código de entrada, é com este aqui que você cria um novo. Tire um print ou anote num lugar seguro. Ele não aparece de novo."}),
+    h("div",{class:"card"},h("span",{class:"eyebrow",text:"Login: "+S.usuario}),h("p",{class:"code",text:S.codigoRec})),
+    h("button",{class:"btn",onclick:()=>{try{navigator.clipboard.writeText(S.codigoRec).then(()=>toast("Código copiado."),()=>toast("Não consegui copiar. Anote o código."))}catch(e){toast("Não consegui copiar. Anote o código.")}}},"Copiar código"),
+    h("button",{class:"btn primary block",onclick:()=>{S.codigoRec=null;render(true)}},"Já guardei, continuar"));
+}
+function telaMigrado(){
+  return h("div",{class:"login"},h("h1",{text:"O diário mudou"}),
+    h("p",{text:"Este código antigo não abre mais o diário. Peça para a dona do diário o novo código de quem acompanha."}),
+    h("button",{class:"btn primary block",onclick:sair},"Voltar"));
+}
+function telaMigrar(){const L=S.lg;
+  if(!L.u&&!L.c&&!L.mexeu){L.u="mariana";if(S.pinLegado){L.c=S.pinLegado;L.c2=S.pinLegado}}
+  const erro=L.erro?h("p",{role:"alert",style:"color:var(--alert);font-weight:700",text:L.erro}):null;
+  return h("div",{class:"stack",style:"gap:18px"},
+    h("div",{class:"row between"},h("h1",{text:"Ativar meu cadastro"}),h("button",{class:"btn ghost",onclick:()=>{S.lg=novoLg();go("ajustes")}},"Voltar")),
+    h("p",{class:"muted",text:"Todos os registros deste diário vão para o seu cadastro e ficam protegidos pelo seu código. Você continua entrando só com o código."}),
+    h("form",{class:"stack",onsubmit:e=>{e.preventDefault();L.mexeu=true;if(!L.ocupado)cadastrar(true)}},
+      campoLg("u","Seu login (usuário)","text","username"),
+      campoCod("c","Seu código de entrada"),campoCod("c2","Repita o código"," "),
+      h("p",{class:"small muted",text:S.pinLegado?"Já preenchemos com o código que você usa hoje. Pode trocar se quiser.":"Pode ser o mesmo código que você usa hoje."}),
+      campoCod("ca","Código de quem te acompanha (opcional)","Pode ser o mesmo que a pessoa já usa"),
+      campoLg("emNome","Contato de emergência: nome (opcional)","text","off"),
+      campoLg("emNum","Contato de emergência: número (opcional)","tel","off",{inputmode:"tel"}),
+      erro,L.prog?h("p",{class:"small",role:"status",text:L.prog}):null,
+      h("button",{class:"btn primary",type:"submit",disabled:L.ocupado||null},L.ocupado?"Passando os registros…":"Ativar cadastro e levar meus registros")));
+}
+
+/* ---------- componentes ---------- */
+function chips(opcoes,sel,onT,multi=true){return h("div",{class:"chips"},opcoes.map(o=>{const t=typeof o==="string"?o:o.t;const sub=typeof o==="string"?null:o.p;
+  const on=multi?sel.includes(t):sel===t;
+  return h("button",{class:"chip"+(sub?" tall":""),"aria-pressed":on?"true":"false",onclick:()=>onT(t)},t,sub?h("small",{text:sub}):null)}))}
+function toggleIn(arr,v){const i=arr.indexOf(v);i>=0?arr.splice(i,1):arr.push(v)}
+function hscale(labels,val,on,start=0){return h("div",{class:"hscale"},labels.map((l,i)=>h("button",{class:"opt","aria-pressed":val===i+start?"true":"false",onclick:()=>on(i+start)},h("b",{text:String(i+start)}),l)))}
+function campo(id,label,val,ph,onIn,area=true){return h("div",null,h("label",{class:"lbl",for:id,text:label}),
+  h(area?"textarea":"input",Object.assign({id,placeholder:ph,oninput:e=>onIn(e.target.value)},area?{}:{type:"text"}),area?(val||""):null))}
+function setVal(el,v){el.value=v||"";return el}
+function moodPill(v){const m=humorDe(v);if(!m)return null;return h("span",{class:"pill"},h("span",{class:"sw",style:"background:var("+m.c+")"}),m.label)}
+
+/* ---------- início (ela) ---------- */
+function inicioEla(){
+  const agora=new Date();const hoje=diaLocal(agora);
+  const deHoje=S.entries.filter(e=>e.dia===hoje);
+  const naoLidos=S.recados.filter(r=>!r.lido);
+  const sin=sinais(S.entries);
+  return h("div",{class:"stack",style:"gap:18px"},
+    h("div",{class:"top"},h("div",{class:"stack",style:"gap:4px"},h("h1",{text:"Oi"+((S.config.nomeEla||"").trim()?", "+S.config.nomeEla.trim():"")+"."}),
+      h("p",{class:"muted",text:DIAS[agora.getDay()]+", "+agora.getDate()+" de "+MESES[agora.getMonth()]+" · "+pad2(agora.getHours())+":"+pad2(agora.getMinutes())}))),
+    S.legado?h("div",{class:"card soft"},h("b",{text:"Novo: ative seu cadastro"}),h("p",{class:"small",text:"Leva um minuto. Você continua entrando com o mesmo código, e seus registros ficam protegidos."}),
+      h("button",{class:"btn primary",style:"align-self:flex-start",onclick:()=>{S.lg=novoLg();go("migrar")}},"Ativar cadastro")):null,
+    (S.legado||S.usuario==="mariana")&&Date.now()<Date.parse("2026-11-27T03:00:00Z")&&!ls.get("aviso-cor-visto",false)?h("div",{class:"card soft"},
+      h("b",{text:"Novidade: escolha a cor do app"}),h("p",{class:"small",text:"Agora dá para mudar a cor do app (tem até bordô) e deixar claro ou escuro. Fica em Ajustes, no quadro Cor e aparência."}),
+      h("div",{class:"row"},h("button",{class:"btn primary",onclick:()=>{ls.set("aviso-cor-visto",true);go("ajustes")}},"Ir para Ajustes"),
+        h("button",{class:"btn ghost",onclick:()=>{ls.set("aviso-cor-visto",true);render(true)}},"Ok, entendi"))):null,
+    botaoEmergencia(),
+    h("button",{class:"sos-btn",onclick:iniciarSOS},h("b",{text:"Guia para me acalmar"}),h("span",{text:"Um passo de cada vez para o corpo se acalmar"})),
+    h("div",{class:"actions"},
+      h("button",{class:"action",onclick:()=>iniciarFlow("checkin")},h("span",{class:"ico"},icon(IC.face)),h("b",{text:"Como estou agora"}),h("span",{class:"small muted",text:"Humor, energia, sono e remédio. Leva uns 2 minutos."})),
+      h("button",{class:"action",onclick:()=>iniciarFlow("abc")},h("span",{class:"ico"},icon(IC.bolt)),h("b",{text:"Algo me incomodou"}),h("span",{class:"small muted",text:"Registro ABC: o que aconteceu, o que pensei, o que senti e fiz."})),
+      h("button",{class:"action",onclick:()=>go("cartoes")},h("span",{class:"ico"},icon(IC.chat)),h("b",{text:"Sem forças para escrever"}),h("span",{class:"small muted",text:"Cartões prontos para mandar no WhatsApp com um toque."})),
+      h("button",{class:"action",onclick:()=>go("compras")},h("span",{class:"ico"},icon(IC.list)),h("b",{text:"Compras e saídas"}),h("span",{class:"small muted",text:pendentes().length?"Falta comprar: "+pendentes().slice(0,3).map(c=>c.texto).join(", ")+(pendentes().length>3?"…":""):"Anote o que acabou e receba lembrete quando sair de casa."})),
+      h("button",{class:"action calm",onclick:()=>go("calma")},h("span",{class:"ico"},icon(IC.leaf)),h("b",{text:"Preciso de calma"}),h("span",{class:"small muted",text:"Respiração, dicas para diminuir estímulos e contatos de ajuda."}))),
+    respostasRecentes(),
+    naoLidos.length?h("div",{class:"card soft"},h("span",{class:"eyebrow",text:"Recado para você"}),
+      naoLidos.slice(0,3).map(r=>h("div",{class:"stack",style:"gap:4px"},h("p",{text:r.texto}),h("div",{class:"row between"},h("span",{class:"small muted",text:haQuanto(r.criadoEm)}),
+        h("button",{class:"btn ghost",onclick:async()=>{try{await atualizar("recados",r,{lido:true})}catch(e){toast("Não consegui marcar como lido.")}}},"Marcar como lido"))))):null,
+    sin.length?h("div",{class:"card warn"},h("span",{class:"eyebrow",text:"Vale prestar atenção"}),h("p",{text:sin[0].titulo}),h("button",{class:"btn ghost",style:"align-self:flex-start;padding-left:0",onclick:()=>go("padroes")},"Ver padrões")):null,
+    h("div",{class:"stack"},h("h2",{text:"Hoje"}),
+      deHoje.length?deHoje.slice(0,4).map(itemRegistro):h("div",{class:"card soft"},h("p",{class:"muted",text:"Nenhum registro hoje ainda. Um check-in por dia já ajuda muito a ver padrões, de preferência sempre no mesmo horário."}))));
+}
+
+/* ---------- início (acompanhante) ---------- */
+function inicioParceiro(){
+  const ultimoCheck=S.entries.find(e=>e.tipo==="checkin");const hoje=diaLocal(new Date());
+  const abcHoje=S.entries.filter(e=>e.tipo==="abc"&&e.dia===hoje);const sin=sinais(S.entries);
+  const seg=S.entries.find(e=>e.dia===hoje&&((e.tipo==="checkin"&&e.seguranca===2)||(e.tipo==="abc"&&(e.c?.comportamentos||[]).includes("Vontade de me machucar"))));
+  return h("div",{class:"stack",style:"gap:18px"},
+    h("div",{class:"stack",style:"gap:4px"},h("h1",{text:"Como "+nomeEla3().replace(/^Ela$/,"ela")+" está"}),h("p",{class:"muted",text:"Painel de cuidado. Aqui você acompanha e deixa recados."})),
+    cartoesParaParceiro(),
+    h("button",{class:"action",onclick:()=>go("compras")},h("span",{class:"ico"},icon(IC.list)),h("b",{text:"Lista de compras dela"}),h("span",{class:"small muted",text:pendentes().length?"Falta: "+pendentes().slice(0,4).map(c=>c.texto).join(", "):"Nada faltando. Você também pode adicionar itens."})),
+    seg?h("div",{class:"card alert"},h("b",{text:"Hoje ela registrou pensamentos de se machucar."}),h("p",{text:"Procure ela com calma, fique por perto e pergunte do que precisa. Se houver risco imediato, ligue 192 (SAMU). O CVV atende 24h no 188."})):null,
+    ultimoCheck?h("div",{class:"card"},h("span",{class:"eyebrow",text:"Último check-in · "+haQuanto(ultimoCheck.criadoEm)}),
+      h("div",{class:"row"},moodPill(ultimoCheck.humor)),
+      h("p",{class:"small",text:resumoCheck(ultimoCheck)}),ultimoCheck.nota?h("p",{class:"small muted",text:"“"+ultimoCheck.nota+"”"}):null)
+      :h("div",{class:"card soft"},h("p",{class:"muted",text:"Ainda não há check-ins. Quando ela registrar, o resumo aparece aqui."})),
+    sin.length?h("div",{class:"card warn"},h("span",{class:"eyebrow",text:"Sinais de atenção"}),sin.map(x=>h("div",null,h("b",{text:x.titulo}),h("p",{class:"small",text:x.texto})))):null,
+    h("div",{class:"card"},h("h2",{text:"Deixar um recado"}),h("p",{class:"small muted",text:"Ela vê na tela inicial. Frases curtas e diretas costumam funcionar melhor."}),
+      setVal(h("textarea",{id:"recado",placeholder:"Ex.: Estou orgulhosa de você por ter registrado hoje. Quer jantar em silêncio comigo?",oninput:e=>{S.recado=e.target.value}}),S.recado),
+      h("button",{class:"btn primary",style:"align-self:flex-start",onclick:async()=>{const t=S.recado.trim();if(!t)return;
+        try{await salvar("recados",{texto:t.slice(0,600),criadoEm:new Date().toISOString(),lido:false});S.recado="";toast("Recado enviado.")}catch(e){toast("Não consegui salvar o recado.")}}},"Enviar recado")),
+    h("div",{class:"stack"},h("h2",{text:"Registros ABC de hoje"}),abcHoje.length?abcHoje.map(itemRegistro):h("p",{class:"muted",text:"Nenhum registro de incômodo hoje."})));
+}
+function cartoesParaParceiro(){
+  const lim=Date.now()-48*36e5;const rec=S.avisos.filter(a=>new Date(a.criadoEm)>=lim);
+  if(!rec.length)return null;
+  const pend=rec.filter(a=>!a.resposta);
+  return h("div",{class:"card"+(pend.length?" warn":"")},
+    h("span",{class:"eyebrow",text:pend.length?"Cartões dela esperando resposta":"Cartões dela · últimas 48 h"}),
+    rec.slice(0,5).map(a=>h("div",{class:"stack",style:"gap:6px;padding-block:4px"},
+      h("p",{style:"font-weight:700;font-size:1.1em",text:a.texto}),
+      h("p",{class:"small muted",text:haQuanto(a.criadoEm)+" · "+hora(a.criadoEm)+(a.canal==="whatsapp"?" · também abriu o WhatsApp":"")}),
+      a.resposta?h("p",{class:"small",style:"color:var(--ok);font-weight:700",text:"Você respondeu: "+a.resposta})
+        :h("div",{class:"reply"},RESPOSTAS.map(r=>h("button",{class:"chip",onclick:async()=>{
+          try{await atualizar("avisos",a,{resposta:r,respondidoEm:new Date().toISOString()});toast("Resposta enviada. Ela vê no app.")}catch(e){toast("Não consegui responder.")}}},r))))));
+}
+function resumoCheck(e){const p=[];if(e.energia!=null)p.push("Energia: "+ENERGIA[e.energia-1]);if(e.sonoHoras!=null)p.push("Sono: "+e.sonoHoras+" h");
+  if(e.bateria!=null)p.push("Bateria social/sensorial: "+BATERIA[e.bateria]);if(e.ansiedade!=null)p.push("Ansiedade: "+NIVEL[e.ansiedade]);if(e.irritacao!=null)p.push("Irritação: "+NIVEL[e.irritacao]);
+  if(e.remedio){const r=REMEDIO.find(x=>x.v===e.remedio);r&&p.push("Remédio: "+r.l)}return p.join(" · ")}
+
+/* ---------- item de histórico ---------- */
+function itemRegistro(e){
+  const aberto=S.expanded===e.id;
+  if(e.tipo==="regulacao")return h("div",{class:"entry",style:"cursor:default"},h("span",{class:"eyebrow",text:"Guia de sobrecarga · "+hora(e.criadoEm)}),
+    h("p",{class:"small",text:"Depois do guia: "+(e.resultado||"—")}),(e.feitos||[]).length?h("p",{class:"small muted",text:"Fez: "+e.feitos.join(" · ")}):null);
+  const meta=h("div",{class:"meta"},h("span",{class:"eyebrow",text:(e.tipo==="abc"?"Registro ABC":"Check-in")+" · "+hora(e.criadoEm)+(e.quando&&e.quando!=="Agora"?" · aconteceu "+e.quando.toLowerCase():"")}));
+  let corpo;
+  if(e.tipo==="checkin"){corpo=h("div",{class:"stack",style:"gap:6px"},h("div",{class:"row"},moodPill(e.humor)),h("p",{class:"small",text:resumoCheck(e)}),
+    aberto&&(e.corpo||[]).length?h("p",{class:"small",text:"Corpo: "+e.corpo.join(", ")}):null,
+    aberto&&e.sonoQualidade!=null?h("p",{class:"small",text:"Qualidade do sono: "+SONOQ[e.sonoQualidade]}):null,
+    e.nota?h("p",{class:"small muted",text:"“"+e.nota+"”"}):null)}
+  else{const a=e.a||{},b=e.b||{},c=e.c||{},d=e.d||{};
+    corpo=h("div",{class:"chain"},
+      h("span",{class:"k",text:"A"}),h("div",{class:"v small"},(a.gatilhos||[]).join(", ")||"—",a.intensidade!=null?" · incômodo "+a.intensidade+"/10":"",aberto&&a.texto?h("p",{class:"muted",text:a.texto}):null),
+      aberto?h("span",{class:"k",text:"B"}):null,aberto?h("div",{class:"v small"},(b.pensamentos||[]).join("; ")||"—",b.texto?h("p",{class:"muted",text:b.texto}):null,
+        (b.locais||[]).length||(b.sensacoes||[]).length?h("p",{class:"muted",text:"No corpo: "+[...(b.sensacoes||[]),...(b.locais||[])].join(", ")}):null):null,
+      h("span",{class:"k",text:"C"}),h("div",{class:"v small"},[...(c.emocoes||[]),...(aberto?(c.comportamentos||[]):[])].join(", ")||"—",c.intensidade!=null?" · emoção "+c.intensidade+"/10":"",aberto&&c.depois?h("p",{class:"muted",text:"Depois: "+c.depois}):null),
+      aberto&&((d.ajudou||[]).length||d.gentil)?h("span",{class:"k",text:"D"}):null,
+      aberto&&((d.ajudou||[]).length||d.gentil)?h("div",{class:"v small"},(d.ajudou||[]).length?"Ajudou: "+d.ajudou.join(", "):"",d.gentil?h("p",{class:"muted",text:"Outro jeito de ver: "+d.gentil}):null):null)}
+  const del=aberto&&S.perfil==="ela"?(S.confirmDel===e.id?
+      h("div",{class:"row",onclick:ev=>ev.stopPropagation()},h("span",{class:"small",text:"Apagar este registro? Não dá para desfazer."}),
+        h("button",{class:"btn danger",onclick:async ev=>{ev.stopPropagation();try{await apagarDoc("registros",e.id);S.confirmDel=null;toast("Registro apagado.")}catch(x){toast("Não consegui apagar.")}}},"Apagar"),
+        h("button",{class:"btn",onclick:ev=>{ev.stopPropagation();S.confirmDel=null;render(true)}},"Cancelar"))
+      :h("div",null,h("button",{class:"btn ghost",style:"padding-left:0",onclick:ev=>{ev.stopPropagation();S.confirmDel=e.id;render(true)}},"Apagar registro"))):null;
+  return h("div",{class:"entry",role:"button",tabindex:"0","aria-expanded":aberto?"true":"false",onclick:()=>{S.expanded=aberto?null:e.id;S.confirmDel=null;render(true)},
+    onkeydown:ev=>{if(ev.key==="Enter"&&ev.target===ev.currentTarget){S.expanded=aberto?null:e.id;render(true)}}},meta,corpo,
+    !aberto?h("span",{class:"small muted",text:"Toque para ver tudo"}):null,del);
+}
+
+/* ---------- histórico ---------- */
+function telaHistorico(){
+  const lista=S.entries.filter(e=>S.filtro==="todos"||e.tipo===S.filtro);
+  const porDia={};lista.forEach(e=>{(porDia[e.dia]=porDia[e.dia]||[]).push(e)});
+  const dias=Object.keys(porDia).sort().reverse();
+  return h("div",{class:"stack"},h("h1",{text:"Histórico"}),
+    chips([{t:"Tudo",v:"todos"},{t:"Check-ins",v:"checkin"},{t:"Registros ABC",v:"abc"}].map(x=>x.t),
+      {todos:"Tudo",checkin:"Check-ins",abc:"Registros ABC"}[S.filtro],t=>{S.filtro={"Tudo":"todos","Check-ins":"checkin","Registros ABC":"abc"}[t];render(true)},false),
+    dias.length?dias.map(d=>h("div",{class:"stack",style:"gap:8px"},h("h3",{class:"day-h",text:nomeDia(d)}),porDia[d].map(itemRegistro)))
+      :h("div",{class:"card soft"},h("p",{class:"muted",text:S.dbState==="carregando"?"Carregando registros…":"Nenhum registro ainda. Os check-ins e registros ABC aparecem aqui, separados por dia."})));
+}
+
+/* ---------- sinais de atenção ---------- */
+function sinais(entries){
+  const lim=Date.now()-7*864e5;const ch=entries.filter(e=>e.tipo==="checkin"&&new Date(e.criadoEm)>=lim);
+  const porDia={};ch.forEach(e=>{(porDia[e.dia]=porDia[e.dia]||[]).push(e)});const dias=Object.values(porDia);
+  const out=[];
+  const sonoCurtoAlto=dias.filter(l=>l.some(e=>e.sonoHoras!=null&&e.sonoHoras<6)&&l.some(e=>e.humor>=1)).length;
+  if(sonoCurtoAlto>=2)out.push({titulo:"Pouco sono junto com humor acelerado em "+sonoCurtoAlto+" dias",texto:"Dormir pouco sem sentir cansaço é um dos primeiros sinais de virada para hipomania. Vale proteger o sono e avisar a psiquiatra."});
+  const baixo=dias.filter(l=>l.some(e=>e.humor<=-2)).length;
+  if(baixo>=3)out.push({titulo:"Humor para baixo em "+baixo+" dos últimos 7 dias",texto:"Quando o humor fica baixo por vários dias seguidos, é bom conversar com a psiquiatra ou terapeuta antes da próxima consulta."});
+  const misto=ch.filter(e=>e.irritacao>=3&&e.energia>=4).length;
+  if(misto>=2)out.push({titulo:"Irritação forte com energia alta",texto:"Essa combinação pode indicar um estado misto. É um bom motivo para avisar a equipe de saúde."});
+  const rem=ch.filter(e=>e.remedio==="nao"||e.remedio==="parcial").length;
+  if(rem>=2)out.push({titulo:"Remédio esquecido ou incompleto "+rem+" vezes nesta semana",texto:"Alarme no celular ou deixar o remédio junto de algo que se usa todo dia (escova de dente, café) pode ajudar."});
+  const bat=dias.filter(l=>l.some(e=>e.bateria!=null&&e.bateria<=1)).length;
+  if(bat>=3)out.push({titulo:"Bateria social e sensorial baixa em "+bat+" dias",texto:"Vários dias com a bateria baixa podem levar a burnout autista. Menos compromissos e mais tempo de recuperação ajudam."});
+  const crises=entries.filter(e=>e.tipo==="abc"&&new Date(e.criadoEm)>=lim&&(e.c?.comportamentos||[]).some(x=>x.startsWith("Crise")||x.startsWith("Desliguei"))).length;
+  if(crises>=3)out.push({titulo:crises+" crises ou desligamentos nesta semana",texto:"Mais crises que o normal costumam indicar sobrecarga acumulada. Veja em Padrões quais gatilhos aparecem mais."});
+  return out;
+}
+
+/* ---------- padrões ---------- */
+function telaPadroes(){
+  const n=S.periodo;const hoje=new Date();hoje.setHours(0,0,0,0);
+  const dias=[];for(let i=n-1;i>=0;i--)dias.push(diaLocal(new Date(hoje.getTime()-i*864e5)));
+  const set=new Set(dias);const doPeriodo=S.entries.filter(e=>set.has(e.dia));
+  const checks=doPeriodo.filter(e=>e.tipo==="checkin"),abcs=doPeriodo.filter(e=>e.tipo==="abc");
+  const contar=(arr)=>{const m={};arr.forEach(x=>{m[x]=(m[x]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1])};
+  const gat=contar(abcs.flatMap(e=>e.a?.gatilhos||[])).slice(0,7);
+  const emo=contar(abcs.flatMap(e=>e.c?.emocoes||[])).slice(0,6);
+  const ajud=contar(abcs.filter(e=>e.c?.depois==="Melhorou").flatMap(e=>e.d?.ajudou||[]).filter(x=>x!=="Nada ajudou ainda")).slice(0,6);
+  const sin=sinais(S.entries);
+  return h("div",{class:"stack",style:"gap:18px"},
+    h("div",{class:"row between"},h("h1",{text:"Padrões"}),chips(["14 dias","30 dias","90 dias"],n+" dias",t=>{S.periodo=parseInt(t);render(true)},false)),
+    sin.length?h("div",{class:"card warn"},h("span",{class:"eyebrow",text:"Sinais de atenção · últimos 7 dias"}),sin.map(x=>h("div",null,h("b",{text:x.titulo}),h("p",{class:"small",text:x.texto}))),
+      h("p",{class:"small muted",text:"Estes avisos são automáticos e não são diagnóstico. Leve para a consulta."})):
+      h("div",{class:"card soft"},h("p",{class:"small",text:"Nenhum sinal de atenção nos últimos 7 dias, pelos registros feitos."})),
+    h("div",{class:"card"},h("h2",{text:"Gráfico do humor"}),h("p",{class:"small muted",text:"Cada ponto é a média do dia. A linha vertical mostra o quanto o humor variou naquele dia. Acima do meio é acelerado, abaixo é para baixo."}),
+      checks.length?h("div",{class:"chart-box"},graficoHumor(dias,checks)):h("p",{class:"muted",text:"Faça check-ins para o gráfico aparecer."})),
+    checks.some(e=>e.sonoHoras!=null)?h("div",{class:"card"},h("h2",{text:"Sono"}),h("p",{class:"small muted",text:"Horas dormidas por noite. A linha tracejada marca 7 horas. Mudanças bruscas no sono costumam vir antes das mudanças de humor."}),h("div",{class:"chart-box"},graficoSono(dias,checks))):null,
+    h("div",{class:"card"},h("h2",{text:"O que mais incomodou (A)"}),gat.length?barras(gat):h("p",{class:"muted small",text:"Aparece quando houver registros ABC."})),
+    emo.length?h("div",{class:"card"},h("h2",{text:"Emoções mais frequentes (C)"}),barras(emo)):null,
+    ajud.length?h("div",{class:"card"},h("h2",{text:"O que ajudou quando melhorou"}),barras(ajud),h("p",{class:"small muted",text:"Isso vira o seu plano de calma. Dá para anotar em Ajustes."})):null,
+    h("p",{class:"small muted",text:checks.length+" check-ins e "+abcs.length+" registros ABC nos últimos "+n+" dias."}));
+}
+function barras(lista){const max=lista[0][1];return h("div",{class:"bars"},lista.map(([k,v])=>h("div",{class:"bar"},h("span",{text:k}),h("span",{class:"t"},h("i",{style:"width:"+Math.max(6,v/max*100)+"%"})),h("span",{class:"n",text:String(v)}))))}
+function graficoHumor(dias,checks){
+  const W=640,H=250,pl=34,pr=10,pt=12,pb=28;const iw=W-pl-pr,ih=H-pt-pb;
+  const x=i=>pl+(dias.length===1?iw/2:i*iw/(dias.length-1));const y=v=>pt+(3-v)*ih/6;
+  const g=s("svg",{viewBox:"0 0 "+W+" "+H,role:"img","aria-label":"Gráfico de humor por dia"});
+  [[3,1,"--m2"],[-1,-3,"--m-2"]].forEach(([a,b,c])=>g.append(s("rect",{x:pl,y:y(a),width:iw,height:y(b)-y(a),fill:"var("+c+")","fill-opacity":"0.08"})));
+  for(let v=-3;v<=3;v++){g.append(s("line",{x1:pl,x2:W-pr,y1:y(v),y2:y(v),stroke:"var(--line)","stroke-width":v===0?1.5:0.6,"stroke-dasharray":v===0?null:"3 4"}));
+    g.append(s("text",{x:pl-8,y:y(v)+4,"text-anchor":"end","font-size":"11",fill:"var(--muted)"},(v>0?"+":"")+v))}
+  const pts=[];
+  dias.forEach((d,i)=>{const l=checks.filter(e=>e.dia===d&&typeof e.humor==="number");if(!l.length)return;
+    const vs=l.map(e=>e.humor);const avg=vs.reduce((a,b)=>a+b,0)/vs.length;const mn=Math.min(...vs),mx=Math.max(...vs);
+    if(mx!==mn)g.append(s("line",{x1:x(i),x2:x(i),y1:y(mx),y2:y(mn),stroke:"var(--muted)","stroke-width":2,"stroke-linecap":"round"}));
+    pts.push([x(i),y(avg),humorDe(Math.round(avg))])});
+  if(pts.length>1)g.append(s("polyline",{points:pts.map(p=>p[0]+","+p[1]).join(" "),fill:"none",stroke:"var(--muted)","stroke-width":1.2,"stroke-opacity":"0.6"}));
+  pts.forEach((p,i)=>g.append(s("circle",{cx:p[0],cy:p[1],r:i===pts.length-1?6:4.5,fill:"var("+p[2].c+")",stroke:"var(--surface)","stroke-width":1.5})));
+  const passo=dias.length>40?14:dias.length>20?5:2;
+  dias.forEach((d,i)=>{if((dias.length-1-i)%passo===0){const[,m,dd]=d.split("-");g.append(s("text",{x:x(i),y:H-8,"text-anchor":"middle","font-size":"11",fill:"var(--muted)"},Number(dd)+"/"+Number(m)))}});
+  return g;
+}
+function graficoSono(dias,checks){
+  const W=640,H=150,pl=34,pr=10,pt=10,pb=26;const iw=W-pl-pr,ih=H-pt-pb;const max=12;
+  const bw=Math.max(2,iw/dias.length*0.6);const x=i=>pl+(i+0.5)*iw/dias.length;const y=v=>pt+ih-(Math.min(v,max)/max)*ih;
+  const g=s("svg",{viewBox:"0 0 "+W+" "+H,role:"img","aria-label":"Gráfico de horas de sono"});
+  [0,4,8,12].forEach(v=>{g.append(s("line",{x1:pl,x2:W-pr,y1:y(v),y2:y(v),stroke:"var(--line)","stroke-width":0.6}));g.append(s("text",{x:pl-8,y:y(v)+4,"text-anchor":"end","font-size":"11",fill:"var(--muted)"},v+"h"))});
+  g.append(s("line",{x1:pl,x2:W-pr,y1:y(7),y2:y(7),stroke:"var(--accent)","stroke-width":1,"stroke-dasharray":"5 4"}));
+  dias.forEach((d,i)=>{const l=checks.filter(e=>e.dia===d&&e.sonoHoras!=null);if(!l.length)return;const v=l[0].sonoHoras;
+    g.append(s("rect",{x:x(i)-bw/2,y:y(v),width:bw,height:y(0)-y(v),rx:2,fill:v<6?"var(--m2)":"var(--accent)"}))});
+  const passo=dias.length>40?14:dias.length>20?5:2;
+  dias.forEach((d,i)=>{if((dias.length-1-i)%passo===0){const[,m,dd]=d.split("-");g.append(s("text",{x:x(i),y:H-8,"text-anchor":"middle","font-size":"11",fill:"var(--muted)"},Number(dd)+"/"+Number(m)))}});
+  return g;
+}
+
+/* ---------- calma ---------- */
+function pararRespiracao(){if(breathTimer){clearTimeout(breathTimer);breathTimer=null}S.breath=null}
+function respirar(){
+  if(S.breath){pararRespiracao();render(true);return}
+  let ciclo=0;const passo=fase=>{S.breath=fase;render(true);
+    if(fase==="in")breathTimer=setTimeout(()=>passo("out"),4000);
+    else{ciclo++;breathTimer=setTimeout(()=>ciclo>=8?(pararRespiracao(),toast("Pronto. 8 respirações feitas."),render(true)):passo("in"),6000)}};
+  passo("in");
+}
+/* ---------- cartões prontos (WhatsApp + registro no app) ---------- */
+const nomeParc=()=>(S.config.nomeParceiro||"").trim();
+function waNumero(){let n=String(S.config.whatsappParceiro||"").replace(/\D/g,"");if(n.length===10||n.length===11)n="55"+n;return n.length>=12?n:""}
+function waLink(texto){const n=waNumero();return"https://wa.me/"+n+"?text="+encodeURIComponent(texto)}
+async function registrarAviso(texto,tipo,canal){
+  try{await salvar("avisos",{texto,tipo,canal,criadoEm:new Date().toISOString(),resposta:null,respondidoEm:null});return true}catch(e){return false}}
+function cartao(texto,tipo){
+  return h("div",{class:"cm"},h("p",{class:"cm-t",text:texto}),
+    h("div",{class:"cm-a"},
+      h("a",{class:"btn primary",href:waLink(texto),target:"_blank",rel:"noopener",onclick:async()=>{
+        const ok=await registrarAviso(texto,tipo,"whatsapp");
+        toast(ok?"Abrindo o WhatsApp. Também ficou registrado no app.":"Abrindo o WhatsApp.")}},"WhatsApp"),
+      h("button",{class:"btn",onclick:async()=>{const ok=await registrarAviso(texto,tipo,"app");toast(ok?"Registrado no app"+(nomeParc()?" para "+nomeParc():"")+".":"Não consegui registrar no app.")}},"Só no app"),
+      h("button",{class:"btn ghost",onclick:()=>{S.big=texto;render(true)}},"Mostrar")))}
+function botaoEmergencia(){
+  const msg=AVISOS[0];const quem=(S.config.nomeParceiro||"").trim();
+  return h("a",{class:"emerg",href:waLink(msg),target:"_blank",rel:"noopener",onclick:async()=>{
+      const ok=await registrarAviso(msg,"aviso","whatsapp");
+      toast(ok?"Aviso enviado no app. No WhatsApp, só toque em enviar.":"Abrindo o WhatsApp. Só toque em enviar.")}},
+    h("span",{class:"emerg-i","aria-hidden":"true"},icon(IC.chat)),
+    h("span",{class:"emerg-t"},h("b",{text:"Estou sobrecarregada"}),
+      h("span",{text:"Um toque avisa "+(quem||"quem cuida de você")+" com a mensagem pronta"})));
+}
+function cartaoSocial(texto){
+  return h("div",{class:"cm"},h("p",{class:"cm-t",text:texto}),
+    h("div",{class:"cm-a"},
+      h("a",{class:"btn primary",href:"https://wa.me/?text="+encodeURIComponent(texto),target:"_blank",rel:"noopener"},"WhatsApp"),
+      h("button",{class:"btn",onclick:ev=>{const b=ev.currentTarget;
+        try{navigator.clipboard.writeText(texto).then(()=>toast("Copiado. É só colar na conversa."),()=>toast("Não consegui copiar. Segure o texto do cartão para copiar."))}
+        catch(e){toast("Não consegui copiar. Segure o texto do cartão para copiar.")}}},"Copiar"),
+      h("button",{class:"btn ghost",onclick:()=>{S.big=texto;render(true)}},"Mostrar")))}
+function telaCartoes(){
+  const semNum=!waNumero();
+  return h("div",{class:"stack",style:"gap:18px"},
+    h("div",{class:"row between"},h("h1",{text:"Cartões prontos"}),h("button",{class:"btn ghost",onclick:()=>go("inicio")},"Voltar")),
+    h("p",{class:"muted",text:"Escolha um cartão. \"WhatsApp\" abre a conversa com a mensagem já escrita, só falta tocar em enviar. \"Mostrar\" deixa a frase grande na tela."}),
+    semNum?h("div",{class:"card warn"},h("p",{class:"small",text:"Nenhum número de WhatsApp salvo ainda. Sem ele, o WhatsApp abre e pede para escolher o contato. Dá para salvar o número em Ajustes."})):null,
+    respostasRecentes(),
+    h("div",{class:"stack"},h("h2",{text:"Pedidos"}),h("div",{class:"comm"},PEDIDOS.map(t=>cartao(t,"pedido")))),
+    h("div",{class:"stack"},h("h2",{text:"Como estou"}),h("div",{class:"comm"},AVISOS.map(t=>cartao(t,"aviso")))),
+    h("div",{class:"stack"},h("h2",{text:"Para outras pessoas"}),
+      h("p",{class:"small muted",text:"Para colegas, família, amigos. O WhatsApp abre e você escolhe para quem mandar. Esses não ficam registrados no app."}),
+      h("div",{class:"comm"},SOCIAIS.map(cartaoSocial))));
+}
+function respostasRecentes(){
+  const lim=Date.now()-24*36e5;const rec=S.avisos.filter(a=>new Date(a.criadoEm)>=lim).slice(0,3);
+  if(!rec.length)return null;
+  return h("div",{class:"card soft"},h("span",{class:"eyebrow",text:"Seus cartões recentes"}),
+    rec.map(a=>h("div",{class:"stack",style:"gap:2px"},h("p",{class:"small",text:"“"+a.texto+"” · "+haQuanto(a.criadoEm)}),
+      a.resposta?h("p",{style:"font-weight:700;color:var(--ok)",text:"Resposta: "+a.resposta}):h("p",{class:"small muted",text:"Ainda sem resposta no app."}))));
+}
+
+/* ---------- modo sobrecarga: regulação guiada ----------
+   Ordem pensada para um sistema nervoso em alerta: primeiro segurança e menos estímulo
+   (tirar carga sensorial), depois avisar alguém sem esforço, depois o corpo (expiração longa,
+   pressão profunda, frio no rosto), depois necessidades básicas, aterramento e movimento.
+   Uma instrução por tela, sem escolhas difíceis, sempre dá para pular ou sair. */
+const SOS_PASSOS=[
+ {k:"inicio",t:"Você está segura.",d:"Vamos fazer uma coisa de cada vez. Não precisa pensar, é só seguir a tela.",b:"Começar"},
+ {k:"estimulo",t:"Diminua o que entra.",d:"Se der: vá para um lugar mais quieto. Apague a luz ou feche os olhos. Coloque o fone.",por:"Menos barulho e luz tiram peso do cérebro."},
+ {k:"avisar",t:"Quer avisar alguém?",d:"Um toque abre o WhatsApp com a mensagem pronta. Você não precisa escrever nada."},
+ {k:"respirar",t:"Respire comigo.",d:"Puxe o ar contando até 4. Solte bem devagar contando até 6.",por:"Soltar o ar devagar avisa o corpo que não há perigo."},
+ {k:"pressao",t:"Se abrace forte.",d:"Cruze os braços e aperte, ou aperte uma mão na outra. Conte até 10 e solte. Faça 3 vezes.",por:"Pressão profunda acalma o sistema nervoso. Uma coberta pesada também serve."},
+ {k:"frio",t:"Algo gelado.",d:"Lave o rosto com água fria ou segure algo gelado nos pulsos por alguns segundos.",por:"Frio no rosto faz o coração desacelerar."},
+ {k:"agua",t:"Beba água.",d:"Devagar, um gole de cada vez. Sinta a água descendo.",por:"Sede e fome deixam o corpo mais sensível."},
+ {k:"pes",t:"Sinta os pés no chão.",d:"Aperte os dedos dos pés. Conte até 5. Solte. Perceba o chão te segurando.",por:"Trazer a atenção para o corpo ajuda a sair do turbilhão."},
+ {k:"stim",t:"Pode se mexer.",d:"Balance, mexa as mãos, aperte algo macio. Faça o movimento que o seu corpo pedir.",por:"Stim é um jeito de se regular. Não é errado."},
+ {k:"check",t:"Como você está agora?"}];
+const SOS_RES=["Melhor","Um pouco melhor","Igual","Pior"];
+function iniciarSOS(){pararRespiracao();S.sos={passo:0,feitos:[],fim:null};render(true);window.scrollTo(0,0)}
+function sosAvancar(feito){const s=S.sos;const p=SOS_PASSOS[s.passo];if(feito&&p.k!=="inicio"&&!s.feitos.includes(p.k))s.feitos.push(p.k);pararRespiracao();s.passo++;render(true)}
+async function sosFinalizar(res){const s=S.sos;s.fim=res;render(true);
+  const agora=new Date();
+  try{await salvar("registros",{tipo:"regulacao",quem:"ela",criadoEm:agora.toISOString(),dia:diaLocal(agora),resultado:res,feitos:s.feitos.map(k=>SOS_PASSOS.find(x=>x.k===k).t)})}catch(e){}}
+function sairSOS(){pararRespiracao();S.sos=null;render(true)}
+function telaSOS(){
+  const s=S.sos;const total=SOS_PASSOS.length;
+  const topo=h("div",{class:"topo"},h("div",{class:"dots","aria-label":"Passo "+(Math.min(s.passo,total-1)+1)+" de "+total},SOS_PASSOS.map((_,i)=>h("i",{class:i<=s.passo?"on":""}))),h("button",{class:"x",onclick:sairSOS},"Sair"));
+  if(s.fim){const bem=s.fim==="Melhor"||s.fim==="Um pouco melhor";const plano=(S.config.oQueAjuda||"").trim();
+    return h("div",{class:"sos",role:"dialog","aria-modal":"true"},h("div",{class:"in"},topo,h("div",{class:"meio"},
+      bem?[h("h1",{text:"Você conseguiu."}),h("p",{class:"d",text:"Agora pegue leve. Descanse, coma algo simples, fique num lugar tranquilo. Quando tiver forças, se quiser, registre o que aconteceu."})]
+         :[h("h1",{text:"Tudo bem. Às vezes leva mais tempo."}),h("p",{class:"d",text:"Seu corpo ainda está em alerta. Dá para repetir o guia, respirar mais um pouco ou chamar alguém."}),
+           plano?h("div",{class:"card"},h("span",{class:"eyebrow",text:"O que te ajuda"}),h("p",{style:"white-space:pre-wrap",text:plano})):null,
+           s.fim==="Pior"?contatos():null])),
+      h("div",{class:"base"},
+        bem?h("button",{class:"b1",onclick:sairSOS},"Voltar ao início"):h("button",{class:"b1",onclick:iniciarSOS},"Fazer de novo"),
+        bem?h("button",{class:"b2",onclick:()=>{S.sos=null;iniciarFlow("abc")}},"Registrar o que aconteceu (ABC)")
+           :h("a",{class:"b2",style:"display:flex;align-items:center;justify-content:center;text-decoration:none",href:waLink("Estou sobrecarregada e preciso de ajuda. Pode vir ou me ligar?"),target:"_blank",rel:"noopener",onclick:()=>{registrarAviso("Estou sobrecarregada e preciso de ajuda. Pode vir ou me ligar?","pedido","whatsapp")}},"Pedir ajuda no WhatsApp"),
+        bem?null:h("button",{class:"b2",onclick:sairSOS},"Sair")))}
+  const p=SOS_PASSOS[s.passo];
+  let extra=null,principal=h("button",{class:"b1",onclick:()=>sosAvancar(true)},p.b||"Pronto"),secundario=p.k==="inicio"?null:h("button",{class:"b2",onclick:()=>sosAvancar(false)},"Pular");
+  if(p.k==="avisar"){const msg=AVISOS[0];
+    extra=h("p",{class:"d",style:"font-weight:700;color:#E6ECEF",text:"“"+msg+"”"});
+    principal=h("a",{class:"b1",href:waLink(msg),target:"_blank",rel:"noopener",onclick:()=>{registrarAviso(msg,"aviso","whatsapp");setTimeout(()=>sosAvancar(true),400)}},"Avisar no WhatsApp");
+    secundario=h("button",{class:"b2",onclick:()=>sosAvancar(false)},"Agora não")}
+  if(p.k==="respirar"){extra=h("div",{class:"breath"+(S.breath?" "+S.breath:""),"aria-live":"polite"},h("span",{text:S.breath==="in"?"Puxe… 4":S.breath==="out"?"Solte… 6":"Toque em começar"}));
+    if(!S.breath)principal=h("button",{class:"b1",onclick:respirar},"Começar a respirar");
+    else principal=h("button",{class:"b1",onclick:()=>sosAvancar(true)},"Já estou mais calma")}
+  if(p.k==="check")return h("div",{class:"sos",role:"dialog","aria-modal":"true"},h("div",{class:"in"},topo,h("div",{class:"meio"},h("h1",{text:p.t}))),
+    h("div",{class:"base"},SOS_RES.map((r,i)=>h("button",{class:i===0?"b1":"b2",onclick:()=>sosFinalizar(r)},r))));
+  return h("div",{class:"sos",role:"dialog","aria-modal":"true"},h("div",{class:"in"},topo,
+    h("div",{class:"meio"},h("h1",{text:p.t}),p.d?h("p",{class:"d",text:p.d}):null,extra,p.por?h("p",{class:"por",text:p.por}):null)),
+    h("div",{class:"base"},principal,secundario));
+}
+
+function telaCalma(){
+  const plano=(S.config.oQueAjuda||"").trim();
+  return h("div",{class:"stack",style:"gap:18px"},
+    h("h1",{text:"Calma"}),
+    h("button",{class:"sos-btn",onclick:iniciarSOS},h("b",{text:"Estou sobrecarregada"}),h("span",{text:"Guia passo a passo para se regular"})),
+    h("div",{class:"card"},h("h2",{text:"Respirar devagar"}),h("p",{class:"small muted",text:"Inspire contando até 4 e solte o ar contando até 6. Soltar o ar mais devagar do que puxa ajuda o corpo a sair do modo alerta."}),
+      h("div",{class:"breath"+(S.breath?" "+S.breath:""),"aria-live":"polite"},h("span",{text:S.breath==="in"?"Inspire…":S.breath==="out"?"Solte o ar…":"Pronta?"})),
+      h("button",{class:"btn primary",style:"align-self:center",onclick:respirar},S.breath?"Parar":"Começar 8 respirações")),
+    h("button",{class:"action",onclick:()=>go("cartoes")},h("span",{class:"ico"},icon(IC.chat)),h("b",{text:"Cartões prontos"}),h("span",{class:"small muted",text:"Mandar uma mensagem sem precisar escrever, ou mostrar na tela."})),
+    h("div",{class:"card"},h("h2",{text:"Diminuir estímulos"}),h("ul",{class:"clean"},
+      ["Ir para um lugar com menos luz e barulho","Colocar fone ou protetor de ouvido","Pressão profunda: coberta pesada, abraço apertado ou se enrolar","Segurar algo gelado ou lavar o rosto com água fria","Stim que acalma: balançar, apertar algo, mexer as mãos","Beber água e comer algo simples"].map(t=>h("li",{text:t}))),
+      plano?h("div",{class:"card soft"},h("span",{class:"eyebrow",text:"O que me ajuda (meu plano)"}),h("p",{style:"white-space:pre-wrap",text:plano})):null),
+    contatos());
+}
+function telLink(n){return"tel:"+String(n||"").replace(/[^\d+]/g,"")}
+function contatos(){
+  const med=(S.config.contatoMedico||"").trim();const emN=(S.config.emergenciaNumero||"").trim(),emNome=(S.config.emergenciaNome||"").trim();
+  return h("div",{class:"card alert"},h("h2",{text:"Se estiver difícil demais"}),
+    emN?h("div",{class:"row between"},h("div",null,h("b",{text:(emNome||"Meu contato de emergência")}),h("div",{class:"phone",text:emN})),h("a",{class:"btn primary",href:telLink(emN)},"Ligar")):null,
+    h("p",{text:"Se você pensar em se machucar ou não quiser mais estar aqui, fale com alguém agora. Você não precisa passar por isso sozinha."}),
+    h("div",{class:"row between"},h("div",null,h("b",{text:"CVV, 24 horas, ligação gratuita"}),h("div",{class:"phone",text:"188"})),h("a",{class:"btn",href:"tel:188"},"Ligar")),
+    h("p",{class:"small",text:"O CVV também atende por chat em cvv.org.br."}),
+    h("div",{class:"row between"},h("div",null,h("b",{text:"SAMU, emergência"}),h("div",{class:"phone",text:"192"})),h("a",{class:"btn",href:"tel:192"},"Ligar")),
+    med?h("div",null,h("b",{text:"Minha equipe de saúde"}),h("p",{style:"white-space:pre-wrap;user-select:all",text:med})):null);
+}
+function bigCard(){return h("div",{class:"bigcard",role:"dialog","aria-modal":"true",onclick:()=>{S.big=null;render(true)}},h("p",{text:S.big}),h("span",{class:"muted",text:"Toque para fechar"}))}
+
+/* ---------- como ajudar (acompanhante) ---------- */
+function telaAjudar(){
+  const sinaisP=(S.config.sinaisAlerta||"").trim(),ajuda=(S.config.oQueAjuda||"").trim();
+  const sec=(t,itens,aberto)=>h("details",{class:"card",open:aberto||null},h("summary",{text:t}),h("ul",{class:"clean"},itens.map(i=>h("li",{text:i}))));
+  return h("div",{class:"stack"},h("h1",{text:"Como ajudar"}),
+    h("p",{class:"muted",text:"Orientações gerais baseadas em psicoeducação para transtorno bipolar e autismo. O que vale mais é o que ela mesma diz que ajuda."}),
+    sinaisP||ajuda?h("div",{class:"card soft"},sinaisP?h("div",null,h("span",{class:"eyebrow",text:"Sinais de alerta dela"}),h("p",{style:"white-space:pre-wrap",text:sinaisP})):null,
+      ajuda?h("div",null,h("span",{class:"eyebrow",text:"O que ajuda ela"}),h("p",{style:"white-space:pre-wrap",text:ajuda})):null):null,
+    sec("Durante uma crise sensorial (meltdown)",["Uma crise não é birra nem escolha: é o sistema nervoso sobrecarregado.","Diminua estímulos: luz, barulho, gente em volta.","Fale pouco, com frases curtas e voz baixa. Evite perguntas seguidas.","Não toque sem perguntar. Algumas vezes pressão ajuda, outras piora.","Garanta que ela está segura e espere passar. Conversar sobre o que houve fica para depois, quando ela quiser."],true),
+    sec("Durante um desligamento (shutdown)",["Ela pode parar de falar ou responder. Isso é proteção, não frieza.","Ofereça presença silenciosa e opções de sim/não, ou os cartões da aba Calma.","Dê tempo. Não insista em resposta."]),
+    sec("Sinais de virada para cima (hipomania ou mania)",["Dormir bem menos sem sentir cansaço.","Falar rápido, muitas ideias, começar muitos projetos.","Gastos, decisões ou riscos fora do normal dela.","Irritação maior que o comum.","Como ajudar: proteger rotina de sono, reduzir estímulos à noite, e combinar antes (em fase estável) quando avisar a psiquiatra."]),
+    sec("Sinais de virada para baixo (depressão)",["Isolamento, perda de interesse, muito sono ou insônia.","Dificuldade com tarefas básicas.","Falas de culpa, de ser um peso ou de não ver saída.","Como ajudar: presença, tarefas pequenas juntos, lembrar das consultas. Evite \"é só pensar positivo\"."]),
+    sec("O que costuma não ajudar",["Dizer que é drama, frescura ou falta de força de vontade.","Mudar planos de última hora sem avisar.","Discutir no meio de uma crise.","Tomar decisões por ela sem perguntar."]),
+    contatos());
+}
+
+/* ---------- ajustes ---------- */
+function telaAjustes(){
+  if(!S.cfgDraft)S.cfgDraft={nomeParceiro:S.config.nomeParceiro||"",whatsappParceiro:S.config.whatsappParceiro||"",nomeEla:S.config.nomeEla||"",sinaisAlerta:S.config.sinaisAlerta||"",oQueAjuda:S.config.oQueAjuda||"",contatoMedico:S.config.contatoMedico||""};
+  const c=S.cfgDraft;const ela=S.perfil==="ela";
+  const campoCfg=(k,label,ph,area)=>{const el=h(area?"textarea":"input",Object.assign({id:"cfg-"+k,placeholder:ph,oninput:e=>{c[k]=e.target.value}},area?{}:{type:"text"}));el.value=c[k];return h("div",null,h("label",{class:"lbl",for:"cfg-"+k,text:label}),el)};
+  const tg=(k,label,desc)=>h("label",{class:"toggle"},h("span",null,h("b",{text:label}),h("br"),h("span",{class:"small muted",text:desc})),
+    h("input",{type:"checkbox",checked:prefs[k]||null,onchange:e=>{prefs[k]=e.target.checked;ls.set(k,prefs[k]);aplicarPrefs()}}));
+  const F=S.contaForm;
+  const inF=(k,label,type,ph)=>{const el=h("input",{id:"cf-"+k,type:type||"password",inputmode:(type||"password")==="password"?"numeric":null,autocomplete:type==="tel"||type==="text"?"off":"new-password",placeholder:ph||"",oninput:e=>{F[k]=e.target.value}});el.value=F[k]||"";
+    return h("div",null,h("label",{class:"lbl",for:"cf-"+k,text:label}),el)};
+  if(F.emNome==null){F.emNome=S.config.emergenciaNome||"";F.emNum=S.config.emergenciaNumero||""}
+  const msg=F.msg?h("p",{role:"alert",style:"color:var(--alert);font-weight:700",text:F.msg}):null;
+  const conta=!S.legado?h("div",{class:"card"},h("h2",{text:"Meu cadastro"}),
+      h("p",{class:"small",text:"Login: "+S.usuario+(ela?"":" · você entrou como quem acompanha")}),
+      ela?h("details",null,h("summary",{text:"Trocar meu código de entrada"}),h("div",{class:"stack"},inF("nova","Novo código","password","Só números"),inF("nova2","Repita o novo código"),
+        h("button",{class:"btn primary",style:"align-self:flex-start",disabled:F.ocupado||null,onclick:()=>trocarCodigo("dono")},"Salvar novo código"))):null,
+      ela?h("details",null,h("summary",{text:"Código de quem me acompanha"}),h("div",{class:"stack"},
+        h("p",{class:"small muted",text:S.conta&&S.conta.acomp?"Já existe um código de acompanhante. Quem acompanha entra só com esse código e vê o painel de cuidado.":"Crie um código para quem cuida de você. A pessoa entra só com esse código e vê o painel de cuidado."}),
+        inF("acomp",S.conta&&S.conta.acomp?"Novo código de acompanhante":"Código de acompanhante","password","Diferente do seu"),
+        h("div",{class:"row"},h("button",{class:"btn primary",disabled:F.ocupado||null,onclick:()=>trocarCodigo("acomp")},"Salvar código"),
+          S.conta&&S.conta.acomp?h("button",{class:"btn",onclick:removerAcomp},"Remover acesso"):null),
+        h("p",{class:"small muted",text:"Ao remover, o código deixa de funcionar. Um aparelho que já entrou continua aberto até a pessoa tocar em Sair."}))):null,
+      msg):null;
+  const temaCard=h("div",{class:"card"},h("h2",{text:"Cor e aparência"}),
+    seletorTema(p=>{mudarTema(p);salvarTemaConta()}),
+    h("p",{class:"small muted",text:S.legado?"Fica salvo neste aparelho.":"Fica salvo na sua conta e vale em qualquer aparelho em que você entrar."}));
+  const emCard=h("div",{class:"card"},h("h2",{text:"Número de emergência"}),
+    h("p",{class:"small muted",text:"Aparece com um botão de ligar no quadro de ajuda (aba Calma, guia de sobrecarga e depois de registros difíceis)."}),
+    inF("emNome","Nome","text","Ex.: Mãe, Dra. Ana"),inF("emNum","Número","tel","DDD + número"),
+    h("button",{class:"btn primary",style:"align-self:flex-start",onclick:async()=>{
+      try{await salvarConfig({emergenciaNome:(F.emNome||"").trim().slice(0,40),emergenciaNumero:(F.emNum||"").replace(/[^\d+ ()-]/g,"").slice(0,25).trim()});toast("Número de emergência salvo.")}catch(e){toast("Não consegui salvar.")}}},"Salvar número"));
+  const migrarCard=S.legado&&ela?h("div",{class:"card soft"},h("h2",{text:"Ativar meu cadastro"}),
+      h("p",{class:"small",text:"Crie seu login. Você continua entrando só com o código, e os registros ficam protegidos por ele."}),
+      h("button",{class:"btn primary",style:"align-self:flex-start",onclick:()=>{S.lg=novoLg();go("migrar")}},"Ativar cadastro")):null;
+  const legadoCard=!S.legado&&ela&&ls.get("legado-migrado",false)?h("div",{class:"card warn"},h("h2",{text:"Diário antigo (código de 6 números)"}),
+      h("p",{class:"small",text:"Seus registros já foram copiados para este cadastro. A cópia antiga, sem proteção, ainda existe. Quando conferir que está tudo aqui, pode apagar."}),
+      F.confirmLegado?h("div",{class:"row"},h("span",{class:"small",text:"Apagar a cópia antiga? Não dá para desfazer."}),
+          h("button",{class:"btn danger",onclick:apagarLegado},"Apagar cópia antiga"),h("button",{class:"btn",onclick:()=>{F.confirmLegado=false;render(true)}},"Cancelar"))
+        :h("button",{class:"btn",style:"align-self:flex-start",onclick:()=>{F.confirmLegado=true;render(true)}},"Apagar cópia antiga")):null;
+  return h("div",{class:"stack",style:"gap:18px"},h("h1",{text:"Ajustes"}),
+    conta,cardLembrete(),temaCard,emCard,
+    h("div",{class:"card"},h("h2",{text:"Neste aparelho"}),tg("grande","Texto maior","Aumenta o tamanho de todas as letras."),tg("calmo","Sem animações","Desliga movimentos na tela.")),
+    h("div",{class:"card"},h("h2",{text:"WhatsApp para os cartões"}),
+      h("p",{class:"small muted",text:"Número de quem recebe os cartões prontos. Com DDD, só números. Ex.: 11 98765-4321."}),
+      campoCfg("nomeParceiro","Nome de quem acompanha","Ex.: Amor",false),
+      campoCfg("whatsappParceiro","Número do WhatsApp","DDD + número",false),
+      h("button",{class:"btn primary",style:"align-self:flex-start",onclick:async()=>{
+        try{await salvarConfig(({nomeParceiro:c.nomeParceiro.trim().slice(0,40),whatsappParceiro:c.whatsappParceiro.replace(/[^\d+ ()-]/g,"").slice(0,25)}));toast("WhatsApp salvo.")}catch(e){toast("Não consegui salvar.")}}},"Salvar WhatsApp")),
+    h("div",{class:"card"},h("h2",{text:ela?"Meu plano":"Plano dela"}),
+      h("p",{class:"small muted",text:"Escreva em um momento estável. Fica visível para os dois e aparece na aba Calma e em Como ajudar."}),
+      campoCfg("nomeEla","Nome ou apelido dela","Ex.: Lu",false),
+      campoCfg("sinaisAlerta","Meus sinais de alerta","Ex.: quando durmo menos de 5h e não sinto sono; quando paro de responder mensagens",true),
+      campoCfg("oQueAjuda","O que me ajuda numa crise","Ex.: quarto escuro, fone, coberta pesada, não falar comigo por 20 minutos",true),
+      campoCfg("contatoMedico","Contato da psiquiatra ou terapeuta","Nome e telefone",true),
+      h("button",{class:"btn primary",style:"align-self:flex-start",onclick:async()=>{
+        try{await salvarConfig(({nomeEla:c.nomeEla.trim().slice(0,40),sinaisAlerta:c.sinaisAlerta.slice(0,1500),oQueAjuda:c.oQueAjuda.slice(0,1500),contatoMedico:c.contatoMedico.slice(0,500)}));toast("Plano salvo.")}catch(e){toast("Não consegui salvar.")}}},"Salvar plano")),
+    h("div",{class:"card soft"},h("h2",{text:"Sobre os dados"}),
+      h("p",{class:"small",text:"Seus registros são embaralhados (criptografados) com o seu código antes de sair do celular. O servidor só guarda o embaralhado e nunca vê o seu código. Sem ele, ninguém consegue ler, nem quem cuida do app. Depois de muitas tentativas erradas, a entrada fica bloqueada por 15 minutos."}),
+      h("p",{class:"small",text:"Este diário ajuda a observar padrões e conversar com a equipe de saúde. Ele não substitui psiquiatra, terapeuta nem o tratamento."})),
+    h("button",{class:"btn",onclick:sair},"Sair deste aparelho"));
+}
+
+/* ---------- fluxos (check-in e ABC) ---------- */
+function novoFlow(tipo){return tipo==="checkin"
+  ?{tipo,passo:0,d:{humor:null,energia:null,ansiedade:null,irritacao:null,sonoHoras:7,sonoQualidade:null,remedio:null,bateria:null,corpo:[],nota:"",seguranca:null}}
+  :{tipo,passo:0,d:{quando:"Agora",a:{gatilhos:[],texto:"",intensidade:null},b:{pensamentos:[],texto:"",locais:[],sensacoes:[]},c:{emocoes:[],intensidade:null,comportamentos:[],depois:null},d:{ajudou:[],gentil:""}}}}
+function iniciarFlow(tipo){const rasc=ls.get("rascunho-"+tipo,null);S.flow=rasc&&rasc.tipo===tipo?Object.assign(rasc,{retomado:true}):novoFlow(tipo);render(true);window.scrollTo(0,0)}
+function guardar(){ls.set("rascunho-"+S.flow.tipo,S.flow)}
+function mudou(){guardar();render(true)}
+
+function passosCheckin(d){return[
+  {t:"Como está seu humor agora?",a:"Pense no seu dia até aqui. Não existe resposta certa.",r:()=>h("div",{class:"scale"},HUMOR.map(m=>h("button",{class:"opt","aria-pressed":d.humor===m.v?"true":"false",onclick:()=>{d.humor=m.v;mudou()}},
+      h("span",{class:"sw",style:"background:var("+m.c+")"}),h("span",null,h("b",{text:m.label}),h("br"),h("span",{class:"small muted",text:m.d})))))},
+  {t:"Energia e tensão",a:"Escolha um número em cada linha.",r:()=>h("div",{class:"stack",style:"gap:16px"},
+      h("div",null,h("p",{class:"lbl",text:"Energia"}),hscale(ENERGIA,d.energia,v=>{d.energia=v;mudou()},1)),
+      h("div",null,h("p",{class:"lbl",text:"Ansiedade"}),hscale(NIVEL,d.ansiedade,v=>{d.ansiedade=v;mudou()})),
+      h("div",null,h("p",{class:"lbl",text:"Irritação"}),hscale(NIVEL,d.irritacao,v=>{d.irritacao=v;mudou()})))},
+  {t:"Como foi o sono da última noite?",a:"O sono é um dos sinais mais importantes no transtorno bipolar.",r:()=>h("div",{class:"stack",style:"gap:16px"},
+      h("div",{class:"row",style:"justify-content:center;gap:16px"},
+        h("button",{class:"btn","aria-label":"Menos meia hora",onclick:()=>{d.sonoHoras=Math.max(0,d.sonoHoras-0.5);mudou()}},"−"),
+        h("div",{style:"text-align:center;min-width:6em"},h("div",{class:"phone",text:String(d.sonoHoras).replace(".",",")+" h"}),h("span",{class:"small muted",text:"horas dormidas"})),
+        h("button",{class:"btn","aria-label":"Mais meia hora",onclick:()=>{d.sonoHoras=Math.min(16,d.sonoHoras+0.5);mudou()}},"+")),
+      h("div",null,h("p",{class:"lbl",text:"Qualidade"}),chips(SONOQ,d.sonoQualidade==null?null:SONOQ[d.sonoQualidade],t=>{d.sonoQualidade=SONOQ.indexOf(t);mudou()},false)))},
+  {t:"Remédio e bateria",a:"A bateria social e sensorial é quanta energia sobra para gente, barulho e estímulos.",r:()=>h("div",{class:"stack",style:"gap:16px"},
+      h("div",null,h("p",{class:"lbl",text:"Remédio de hoje"}),chips(REMEDIO.map(x=>x.l),(REMEDIO.find(x=>x.v===d.remedio)||{}).l,t=>{d.remedio=REMEDIO.find(x=>x.l===t).v;mudou()},false)),
+      h("div",null,h("p",{class:"lbl",text:"Bateria social e sensorial"}),hscale(BATERIA,d.bateria,v=>{d.bateria=v;mudou()})))},
+  {t:"E o corpo?",a:"Marque o que estiver sentindo. Pode pular.",r:()=>h("div",{class:"stack",style:"gap:16px"},
+      chips(CORPO_CHECK,d.corpo,t=>{toggleIn(d.corpo,t);mudou()}),
+      campo("nota","Quer anotar algo? (opcional)",d.nota,"Uma frase já basta",v=>{d.nota=v;guardar()}))},
+  {t:"Hoje você teve pensamentos de se machucar ou de não querer estar aqui?",a:"Essa pergunta faz parte do cuidado. Responder com sinceridade ajuda a pedir ajuda na hora certa.",r:()=>h("div",{class:"scale"},
+      SEGURANCA.map(x=>h("button",{class:"opt","aria-pressed":d.seguranca===x.v?"true":"false",onclick:()=>{d.seguranca=x.v;mudou()}},h("b",{text:x.l}))))}]}
+
+function passosAbc(d){return[
+  {t:"Quando foi e quanto incomodou?",a:"A técnica ABC olha para o que aconteceu (A), o que você pensou (B) e o que sentiu e fez (C).",r:()=>h("div",{class:"stack",style:"gap:16px"},
+      h("div",null,h("p",{class:"lbl",text:"Quando aconteceu"}),chips(["Agora","Mais cedo hoje","Ontem"],d.quando,t=>{d.quando=t;mudou()},false)),
+      h("div",null,h("p",{class:"lbl",text:"Quanto incomodou, de 0 a 10"}),escala10(d.a.intensidade,v=>{d.a.intensidade=v;mudou()})))},
+  {t:"A · O que aconteceu?",a:"Marque tudo o que estava acontecendo antes. Pode ser mais de uma coisa.",r:()=>h("div",{class:"stack",style:"gap:12px"},
+      Object.entries(GATILHOS).map(([g,ops])=>h("div",{class:"stack",style:"gap:6px"},h("p",{class:"group-title",text:g}),chips(ops,d.a.gatilhos,t=>{toggleIn(d.a.gatilhos,t);mudou()}))),
+      campo("a-texto","Quer descrever? (opcional)",d.a.texto,"Onde você estava, com quem, o que aconteceu",v=>{d.a.texto=v;guardar()}))},
+  {t:"B · O que passou pela sua cabeça?",a:"Escolha o que mais parece com o que você pensou. Se não veio pensamento nenhum, tudo bem.",r:()=>h("div",{class:"stack",style:"gap:12px"},
+      chips(PENSAMENTOS,d.b.pensamentos,t=>{toggleIn(d.b.pensamentos,t);mudou()}),
+      campo("b-texto","Com suas palavras (opcional)",d.b.texto,"O que eu disse para mim mesma foi…",v=>{d.b.texto=v;guardar()}))},
+  {t:"B · Onde você sentiu no corpo?",a:"Às vezes é mais fácil perceber o corpo do que dar nome à emoção. Pode pular.",r:()=>h("div",{class:"stack",style:"gap:12px"},
+      h("p",{class:"lbl",text:"Onde"}),chips(CORPO_LOCAL,d.b.locais,t=>{toggleIn(d.b.locais,t);mudou()}),
+      h("p",{class:"lbl",text:"Como era"}),chips(CORPO_SENS,d.b.sensacoes,t=>{toggleIn(d.b.sensacoes,t);mudou()}))},
+  {t:"C · O que você sentiu?",a:"\"Não sei dar nome\" também é uma resposta.",r:()=>h("div",{class:"stack",style:"gap:16px"},
+      chips(EMOCOES,d.c.emocoes,t=>{toggleIn(d.c.emocoes,t);mudou()}),
+      h("div",null,h("p",{class:"lbl",text:"Quão forte, de 0 a 10"}),escala10(d.c.intensidade,v=>{d.c.intensidade=v;mudou()})))},
+  {t:"C · O que você fez e como ficou?",a:"Nada aqui é certo ou errado. É só para entender o que acontece.",r:()=>h("div",{class:"stack",style:"gap:16px"},
+      chips(COMPORT,d.c.comportamentos,t=>{toggleIn(d.c.comportamentos,t);mudou()}),
+      h("div",null,h("p",{class:"lbl",text:"Depois disso"}),chips(DEPOIS,d.c.depois,t=>{d.c.depois=t;mudou()},false)))},
+  {t:"D · O que ajudou ou pode ajudar?",a:"Isso vai formando o seu plano de calma.",r:()=>h("div",{class:"stack",style:"gap:12px"},
+      chips(AJUDOU,d.d.ajudou,t=>{toggleIn(d.d.ajudou,t);mudou()}),
+      campo("d-gentil","Se uma amiga passasse por isso, o que você diria a ela? (opcional)",d.d.gentil,"Um jeito mais gentil de ver o que aconteceu",v=>{d.d.gentil=v;guardar()}))},
+  {t:"Revisar",a:"Confira e salve. Dá para voltar e mudar qualquer passo.",r:()=>itemRegistroPreview(d)}]}
+function escala10(val,on){return h("div",{class:"chips",style:"gap:6px"},Array.from({length:11},(_,i)=>h("button",{class:"chip","aria-pressed":val===i?"true":"false",style:"min-width:44px;text-align:center;padding:9px 0",onclick:()=>on(i)},String(i))))}
+function itemRegistroPreview(d){const L=(k,v)=>[h("span",{class:"k",text:k}),h("div",{class:"v"},v)];
+  return h("div",{class:"card"},h("div",{class:"chain"},
+    L("A",[(d.a.gatilhos.join(", ")||"—")+(d.a.intensidade!=null?" · incômodo "+d.a.intensidade+"/10":""),d.a.texto?h("p",{class:"small muted",text:d.a.texto}):null]),
+    L("B",[d.b.pensamentos.join("; ")||"—",d.b.texto?h("p",{class:"small muted",text:d.b.texto}):null,(d.b.locais.length||d.b.sensacoes.length)?h("p",{class:"small muted",text:"No corpo: "+[...d.b.sensacoes,...d.b.locais].join(", ")}):null]),
+    L("C",[[...d.c.emocoes,...d.c.comportamentos].join(", ")||"—",d.c.intensidade!=null?" · "+d.c.intensidade+"/10":"",d.c.depois?h("p",{class:"small muted",text:"Depois: "+d.c.depois}):null]),
+    L("D",[d.d.ajudou.join(", ")||"—",d.d.gentil?h("p",{class:"small muted",text:d.d.gentil}):null])))}
+
+function telaFlow(){
+  const f=S.flow;
+  if(f.feito)return telaFeito();
+  const passos=f.tipo==="checkin"?passosCheckin(f.d):passosAbc(f.d);const p=passos[f.passo];const ultimo=f.passo===passos.length-1;
+  const sair=()=>{S.flow=null;render(true)};
+  return h("div",null,h("main",{class:"wrap"},
+    h("div",{class:"row between"},h("span",{class:"eyebrow",text:(f.tipo==="checkin"?"Check-in":"Registro ABC")+" · passo "+(f.passo+1)+" de "+passos.length}),
+      h("button",{class:"btn ghost",onclick:sair},"Fechar")),
+    h("div",{class:"progress"},h("i",{style:"width:"+((f.passo+1)/passos.length*100)+"%"})),
+    f.retomado&&f.passo===0?h("div",{class:"card soft"},h("p",{class:"small",text:"Continuando de onde você parou."}),
+      h("button",{class:"btn ghost",style:"align-self:flex-start;padding-left:0",onclick:()=>{ls.del("rascunho-"+f.tipo);S.flow=novoFlow(f.tipo);render(true)}},"Começar do zero")):null,
+    h("h1",{text:p.t}),h("p",{class:"muted",text:p.a}),p.r()),
+    h("div",{class:"footer"},h("div",{class:"in"},
+      f.passo>0?h("button",{class:"btn",onclick:()=>{f.passo--;mudou();window.scrollTo(0,0)}},"Voltar"):null,
+      ultimo?h("button",{class:"btn primary",disabled:f.salvando||null,onclick:finalizar},f.salvando?"Salvando…":"Salvar")
+            :h("button",{class:"btn primary",onclick:()=>{f.passo++;mudou();window.scrollTo(0,0)}},"Próximo"))));
+}
+async function finalizar(){
+  const f=S.flow;f.salvando=true;render(true);
+  const agora=new Date();let dia=diaLocal(agora);
+  if(f.tipo==="abc"&&f.d.quando==="Ontem")dia=diaLocal(new Date(agora.getTime()-864e5));
+  const doc=Object.assign({tipo:f.tipo,quem:"ela",criadoEm:agora.toISOString(),dia},JSON.parse(JSON.stringify(f.d)));
+  if(doc.nota)doc.nota=doc.nota.slice(0,1500);
+  try{await salvar("registros",doc);ls.del("rascunho-"+f.tipo);if(f.tipo==="checkin")avisarCheckinFeito();
+    const risco=(f.tipo==="checkin"&&f.d.seguranca===2)||(f.tipo==="abc"&&f.d.c.comportamentos.includes("Vontade de me machucar"));
+    S.flow={tipo:f.tipo,feito:true,risco}}
+  catch(e){f.salvando=false;render(true);toast("Não consegui salvar. Seu registro continua guardado aqui; tente de novo.")}
+  render(true);window.scrollTo(0,0);
+}
+function telaFeito(){const f=S.flow;
+  return h("main",{class:"wrap"},h("h1",{text:"Registrado."}),
+    h("p",{text:f.tipo==="checkin"?"Obrigada por olhar para você hoje. Com alguns dias de registro, os padrões começam a aparecer.":"Você conseguiu separar o que aconteceu, o que pensou e o que sentiu. Isso já é um passo grande."}),
+    f.risco?contatos():null,
+    h("div",{class:"row"},h("button",{class:"btn primary",onclick:()=>{S.flow=null;S.view="inicio";render(true)}},"Voltar ao início"),
+      f.risco?h("button",{class:"btn",onclick:()=>{S.flow=null;go("calma")}},"Ir para Calma"):h("button",{class:"btn",onclick:()=>{S.flow=null;go("padroes")}},"Ver padrões")));
+}
+
+render(true);
+})();
+</script>
+
+</body></html>

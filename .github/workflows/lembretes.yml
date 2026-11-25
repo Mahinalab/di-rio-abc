@@ -1,0 +1,30 @@
+name: Lembretes de check-in
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+    - cron: "17 9 1 * *"
+  workflow_dispatch:
+permissions:
+  actions: write
+  contents: read
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-audit --no-fund
+      - run: node scripts/lembretes.mjs
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          APP_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+      # O GitHub desliga agendamentos de repositórios parados por 60 dias. Isto mantém o lembrete ligado.
+      - name: Manter o agendamento ligado
+        if: github.event.schedule == '17 9 1 * *'
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/lembretes.yml/enable"
+        env:
+          GH_TOKEN: ${{ github.token }}

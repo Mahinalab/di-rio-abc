@@ -1,5 +1,5 @@
 // Diário ABC: recebe os lembretes e deixa o app abrir mesmo com internet fraca.
-const CACHE = "abc-v5";
+const CACHE = "abc-v6";
 const BASICO = ["./", "./index.html", "./config.js", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(BASICO)).catch(() => {})); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

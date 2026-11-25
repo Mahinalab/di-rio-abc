@@ -725,7 +725,7 @@ function chips(opcoes,sel,onT,multi=true){return h("div",{class:"chips"},opcoes.
   const on=multi?sel.includes(t):sel===t;
   return h("button",{class:"chip"+(sub?" tall":""),"aria-pressed":on?"true":"false",onclick:()=>onT(t)},t,sub?h("small",{text:sub}):null)}))}
 function toggleIn(arr,v){const i=arr.indexOf(v);i>=0?arr.splice(i,1):arr.push(v)}
-function hscale(labels,val,on,start=0){return h("div",{class:"hscale"},labels.map((l,i)=>h("button",{class:"opt","aria-pressed":val===i+start?"true":"false",onclick:()=>on(i+start)},h("b",{text:String(i+start)}),l)))}
+function hscale(labels,val,on,start=0){return h("div",{class:"hscale"},labels.map((l,i)=>h("button",{class:"opt","aria-pressed":val===i+start?"true":"false",onclick:()=>on(i+start)},h("b",{text:String(i+1)}),l)))}
 function campo(id,label,val,ph,onIn,area=true){return h("div",null,h("label",{class:"lbl",for:id,text:label}),
   h(area?"textarea":"input",Object.assign({id,placeholder:ph,oninput:e=>onIn(e.target.value)},area?{}:{type:"text"}),area?(val||""):null))}
 function setVal(el,v){el.value=v||"";return el}

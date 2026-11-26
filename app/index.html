@@ -22,6 +22,9 @@
 .tarefa .tx{flex:1;min-width:0;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.tarefa .hr{font-variant-numeric:tabular-nums;color:var(--accent)}
 .tarefa.feita .tx{text-decoration:line-through;color:var(--muted)}
 input[type=time]{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--surface);min-height:44px;font:inherit;color:inherit}
+.popfundo{position:fixed;inset:0;z-index:12;background:rgba(10,16,20,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.popup{width:100%;max-width:460px;max-height:90vh;overflow-y:auto}
+.popup>.card{background:var(--surface);border:1px solid var(--line);box-shadow:0 12px 40px rgba(0,0,0,.3)}
 </style></head><body>
 <title>Diário ABC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -722,7 +725,8 @@ function view(){
                  :{inicio:inicioParceiro,planner:telaPlanner,compras:telaCompras,historico:telaHistorico,padroes:telaPadroes,ajudar:telaAjudar,ajustes:telaAjustes};
   if(ela&&S.legado)telas.migrar=telaMigrar;
   const f=telas[S.view]||telas.inicio;
-  return h("div",null,h("main",{class:"wrap"},avisoDb(),S.view==="inicio"?cardInstalar():null,f()),nav(ela));
+  const pop=S.view==="inicio"?(cardNovidades()||cardInstalar()):null;
+  return h("div",null,h("main",{class:"wrap"},avisoDb(),f()),nav(ela),pop?h("div",{class:"popfundo"},h("div",{class:"popup",role:"dialog","aria-modal":"true"},pop)):null);
 }
 function nav(ela){
   const itens=ela?[["inicio","Início",IC.home],["planner","Planner",IC.cal],["historico","Histórico",IC.list],["padroes","Padrões",IC.chart],["calma","Calma",IC.leaf],["ajustes","Ajustes",IC.gear]]
@@ -872,7 +876,7 @@ function inicioEla(){
       h("b",{text:"Novidade: escolha a cor do app"}),h("p",{class:"small",text:"Agora dá para mudar a cor do app (tem até bordô) e deixar claro ou escuro. Fica em Ajustes, no quadro Cor e aparência."}),
       h("div",{class:"row"},h("button",{class:"btn primary",onclick:()=>{ls.set("aviso-cor-visto",true);go("ajustes")}},"Ir para Ajustes"),
         h("button",{class:"btn ghost",onclick:()=>{ls.set("aviso-cor-visto",true);render(true)}},"Ok, entendi"))):null,
-    cardNovidades(),cardRemedioHoje(),
+    cardRemedioHoje(),
     botaoEmergencia(),
     h("button",{class:"sos-btn",onclick:iniciarSOS},h("b",{text:"Guia para me acalmar"}),h("span",{text:"Um passo de cada vez para o corpo se acalmar"})),
     h("div",{class:"actions"},
@@ -897,7 +901,7 @@ function inicioParceiro(){
   const seg=S.entries.find(e=>e.dia===hoje&&((e.tipo==="checkin"&&e.seguranca===2)||(e.tipo==="abc"&&(e.c?.comportamentos||[]).includes("Vontade de me machucar"))));
   return h("div",{class:"stack",style:"gap:18px"},
     h("div",{class:"stack",style:"gap:4px"},h("h1",{text:"Como "+nomeEla3().replace(/^Ela$/,"ela")+" está"}),h("p",{class:"muted",text:"Painel de cuidado. Aqui você acompanha e deixa recados."})),
-    cardNovidades(),cartoesParaParceiro(),
+    cartoesParaParceiro(),
     h("button",{class:"action",onclick:()=>go("compras")},h("span",{class:"ico"},icon(IC.list)),h("b",{text:"Lista de compras dela"}),h("span",{class:"small muted",text:pendentes().length?"Falta: "+pendentes().slice(0,4).map(c=>c.texto).join(", "):"Nada faltando. Você também pode adicionar itens."})),
     seg?h("div",{class:"card alert"},h("b",{text:"Hoje ela registrou pensamentos de se machucar."}),h("p",{text:"Procure ela com calma, fique por perto e pergunte do que precisa. Se houver risco imediato, ligue 192 (SAMU). O CVV atende 24h no 188."})):null,
     ultimoCheck?h("div",{class:"card"},h("span",{class:"eyebrow",text:"Último check-in · "+haQuanto(ultimoCheck.criadoEm)}),

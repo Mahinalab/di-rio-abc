@@ -1,4 +1,4 @@
-// Envia o lembrete de check-in (todo dia às 10h e no horário que a pessoa escolheu) e os avisos de saída.
+// Envia o lembrete de check-in (10h, ou o horário que a pessoa escolheu), o do remédio e os avisos de saída.
 // Roda no GitHub Actions a cada 15 minutos. Precisa dos segredos SUPABASE_URL e SUPABASE_SECRET_KEY.
 import webpush from "web-push";
 
@@ -36,7 +36,6 @@ function agoraEm(tz) {
 
 const vapid = await chavesVapid();
 webpush.setVapidDetails(APP_URL, vapid.publicKey, vapid.privateKey);
-const CHECKIN_FIXO = 10 * 60;
 const min = hm => { const [h, m] = String(hm).split(":").map(Number); return h * 60 + m; };
 const hhmm = n => String(Math.floor(n / 60)).padStart(2, "0") + ":" + String(n % 60).padStart(2, "0");
 // avisos de saída: na hora de sair, no meio do tempo fora (se for 1h30 ou mais) e meia hora antes de voltar
@@ -59,18 +58,14 @@ for (const l of lista) {
   const enc = encodeURIComponent(l.endpoint);
   const patch = {};
   try {
-    if (l.hora && hm >= l.hora && l.ultimo_envio !== dia && l.ultimo_checkin !== dia) {
+    // sem horário escolhido, o check-in é às 10h; "29:59" quer dizer que a pessoa desligou (nunca chega)
+    const horaCk = l.hora === "29:59" ? null : (l.hora || "10:00");
+    if (horaCk && hm >= horaCk && l.ultimo_envio !== dia && l.ultimo_checkin !== dia) {
       await enviar(l, { title: "Diário ABC", body: "Oi! Que tal fazer seu check-in de hoje? Leva uns 2 minutos.", url: "./?abrir=checkin", tag: "checkin-" + dia });
       patch.ultimo_envio = dia; enviados++;
     }
     const ja = l.enviados && l.enviados.dia === dia ? [...(l.enviados.ids || [])] : [];
     let mudou = false;
-    // check-in fixo das 10h para todo aparelho com avisos ligados (além do horário que a pessoa escolheu)
-    const agoraMin = min(hm);
-    if (agoraMin >= CHECKIN_FIXO && agoraMin <= CHECKIN_FIXO + 60 && !ja.includes("ck10") && l.ultimo_checkin !== dia && l.ultimo_envio !== dia && !patch.ultimo_envio) {
-      await enviar(l, { title: "Diário ABC", body: "Bom dia! Hora do check-in de hoje. Leva uns 2 minutos.", url: "./?abrir=checkin", tag: "checkin10-" + dia });
-      ja.push("ck10"); mudou = true; enviados++;
-    } else if (!ja.includes("ck10") && agoraMin >= CHECKIN_FIXO && l.ultimo_checkin === dia) { ja.push("ck10"); mudou = true; }
     for (const ev of eventosDeSaida(l.agenda, dow)) {
       const agora = min(hm);
       if (agora < ev.em || agora > ev.em + 60 || ja.includes(ev.id)) continue;
@@ -78,7 +73,21 @@ for (const l of lista) {
       await enviar(l, { tipo: ev.tipo, url: "./?abrir=compras", tag: ev.tipo + "-" + dia + "-" + ev.id });
       ja.push(ev.id); mudou = true; enviados++;
     }
-    if (mudou) patch.enviados = { dia, ids: ja };
+    // remédio: no horário (ou se o check-in disse que não tomou), repete a cada 30 min até marcar "Já tomei", no máximo até 23h30
+    const rm = Array.isArray(l.agenda) ? l.agenda.find(x => x && x.k === "remedio") : null;
+    let rmUlt = l.enviados && l.enviados.dia === dia ? l.enviados.rm : undefined;
+    if (rm) {
+      const agoraMin = min(hm);
+      const tomadas = rm.dia === dia && Array.isArray(rm.tomadas) ? rm.tomadas : [];
+      const devidas = (Array.isArray(rm.horas) ? rm.horas : []).filter(x => /^\d\d:\d\d$/.test(x) && x <= hm && !tomadas.includes(x));
+      const pend = rm.dia === dia && rm.pend;
+      if ((devidas.length || pend) && agoraMin <= 23 * 60 + 30 && (rmUlt == null || agoraMin - rmUlt >= 28)) {
+        const corpo = devidas.length ? "Já tomou o remédio das " + devidas.join(", ") + "? Toque em \u201cJá tomei\u201d quando tomar." : "Você ainda não marcou o remédio de hoje. Toque em \u201cJá tomei\u201d quando tomar.";
+        await enviar(l, { tipo: "remedio", title: "Hora do remédio", body: corpo, url: "./?abrir=remedio", tag: "remedio-" + dia });
+        rmUlt = agoraMin; mudou = true; enviados++;
+      }
+    }
+    if (mudou) patch.enviados = { dia, ids: ja, ...(rmUlt != null ? { rm: rmUlt } : {}) };
     if (Object.keys(patch).length) await rest("abc_lembretes?endpoint=eq." + enc, { method: "PATCH", body: JSON.stringify(patch) });
   } catch (e) {
     if (e.statusCode === 404 || e.statusCode === 410) { await rest("abc_lembretes?endpoint=eq." + enc, { method: "DELETE" }); removidos++; }

@@ -1,4 +1,28 @@
-<!doctype html><html lang="pt-BR"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><script>(function(){var u=0;document.addEventListener("touchend",function(e){if(e.touches&&e.touches.length||e.changedTouches&&e.changedTouches.length>1)return;var n=Date.now();if(n-u<350){e.preventDefault();var t=e.target&&e.target.closest&&e.target.closest("button,a,label,[role=button]");if(t)t.click();else if(e.target&&/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))e.target.focus()}u=n},{passive:false})})();</script><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Diário ABC"><meta name="theme-color" content="#2D6A6F"><script src="config.js"></script><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="pt-BR"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><script>(function(){var u=0;document.addEventListener("touchend",function(e){if(e.touches&&e.touches.length||e.changedTouches&&e.changedTouches.length>1)return;var n=Date.now();if(n-u<350){e.preventDefault();var t=e.target&&e.target.closest&&e.target.closest("button,a,label,[role=button]");if(t)t.click();else if(e.target&&/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))e.target.focus()}u=n},{passive:false})})();</script><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Diário ABC"><meta name="theme-color" content="#2D6A6F"><script src="config.js"></script><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.nav .in.seis{grid-template-columns:repeat(6,1fr)}
+.nav .in.seis button{font-size:.68em}
+.tabs.tres{grid-template-columns:repeat(3,1fr)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.mes{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.mes .dsem{text-align:center;font-size:.75em;color:var(--muted);font-weight:700;padding:2px 0}
+.mes .cel{min-height:54px;border:1px solid var(--line);border-radius:10px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;padding:5px 2px}
+.mes .cel .n{font-family:var(--font-display);font-size:.95em;width:26px;height:26px;display:grid;place-items:center;border-radius:50%}
+.mes .cel.fora{opacity:.45}
+.mes .cel.hoje .n{background:var(--accent);color:var(--accent-fg);font-weight:700}
+.mes .cel.sel{border:2px solid var(--accent);background:var(--accent-soft)}
+.mes .pts{display:flex;gap:3px}.mes .pts i{width:6px;height:6px;border-radius:50%;background:var(--accent)}.mes .pts i.ok{background:var(--line)}
+.mes .mais{font-size:.65em;color:var(--muted)}
+.semdia{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px;cursor:pointer;min-height:56px}
+.semdia.sel{border:2px solid var(--accent);background:var(--accent-soft)}
+.semdia .q{display:flex;flex-direction:column;align-items:center;min-width:2.6em}.semdia .q small{color:var(--muted);font-size:.75em}.semdia .q b{font-family:var(--font-display);font-size:1.2em}
+.semdia.hoje .q b{color:var(--accent)}
+.semdia .l{display:flex;flex-direction:column;gap:2px;min-width:0}.semdia .lt{font-size:.9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.semdia .lt.feita{text-decoration:line-through;color:var(--muted)}
+.tarefa{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:6px 6px 6px 10px;background:var(--surface)}
+.tarefa .tk{width:28px;height:28px;flex:none;border-radius:8px;border:2px solid var(--accent);background:transparent;cursor:pointer}
+.tarefa .tk[aria-pressed="true"]{background:var(--accent)}
+.tarefa .tx{flex:1;min-width:0;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.tarefa .hr{font-variant-numeric:tabular-nums;color:var(--accent)}
+.tarefa.feita .tx{text-decoration:line-through;color:var(--muted)}
+input[type=time]{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--surface);min-height:44px;font:inherit;color:inherit}
+</style></head><body>
 <title>Diário ABC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -190,7 +214,7 @@ function h(tag,attrs,...kids){const el=document.createElement(tag);
 const NS="http://www.w3.org/2000/svg";
 function s(tag,attrs,...kids){const el=document.createElementNS(NS,tag);if(attrs)for(const[k,v]of Object.entries(attrs))if(v!=null)el.setAttribute(k,v);for(const c of kids.flat()){if(c==null)continue;el.append(c instanceof Node?c:document.createTextNode(String(c)))}return el}
 function icon(d){return s("svg",{viewBox:"0 0 24 24",fill:"none",stroke:"currentColor","stroke-width":"1.8","stroke-linecap":"round","stroke-linejoin":"round","aria-hidden":"true"},...d.split("|").map(p=>s("path",{d:p})))}
-const IC={home:"M3 11l9-7 9 7|M5 10v10h14V10",list:"M8 6h13|M8 12h13|M8 18h13|M3 6h.01|M3 12h.01|M3 18h.01",chart:"M3 3v18h18|M7 15l4-4 3 3 5-6",leaf:"M12 21c-4-3-7-6-7-11a7 7 0 0 1 14 0c0 5-3 8-7 11z|M12 21V9",gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z|M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
+const IC={home:"M3 11l9-7 9 7|M5 10v10h14V10",cal:"M4 5h16v16H4z|M4 10h16|M8 3v4|M16 3v4",list:"M8 6h13|M8 12h13|M8 18h13|M3 6h.01|M3 12h.01|M3 18h.01",chart:"M3 3v18h18|M7 15l4-4 3 3 5-6",leaf:"M12 21c-4-3-7-6-7-11a7 7 0 0 1 14 0c0 5-3 8-7 11z|M12 21V9",gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z|M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   face:"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z|M8 14s1.5 2 4 2 4-2 4-2|M9 9h.01|M15 9h.01",bolt:"M13 2L4 14h7l-1 8 9-12h-7z",chat:"M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.5A8 8 0 1 1 21 12z",heart:"M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z",help:"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z|M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3|M12 17h.01"};
 const pad2=n=>String(n).padStart(2,"0");
 const diaLocal=d=>d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
@@ -251,7 +275,7 @@ const PERFIS={};
 async function hashCodigo(c){const b=new TextEncoder().encode("abc-diario:"+c);const d=await crypto.subtle.digest("SHA-256",b);return[...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,"0")).join("")}
 
 /* ---------- estado ---------- */
-const S={perfil:null,legado:false,usuario:null,pronto:false,view:"inicio",entries:[],recados:[],avisos:[],compras:[],config:{},configOk:false,dbState:"carregando",
+const S={perfil:null,legado:false,usuario:null,pronto:false,view:"inicio",entries:[],recados:[],avisos:[],compras:[],tarefas:[],config:{},configOk:false,dbState:"carregando",
   flow:null,expanded:null,confirmDel:null,pin:"",pinErro:false,toast:"",periodo:30,filtro:"todos",recado:"",cfgDraft:null,big:null,breath:null,
   lg:null,conta:null,contaForm:{},codigoRec:null,aberto:false,pinOcupado:false,pinLegado:null};
 let pendente=false,breathTimer=null;
@@ -339,14 +363,15 @@ if(!temServidor)S.dbState="indisponivel";
   if(ss&&ss.k&&ss.d){try{BD.raw=unb64(ss.k);BD.key=await chaveDe(BD.raw);BD.token=await tokenDe(BD.raw);BD.diario=ss.d;S.usuario=ss.u;S.perfil=ss.p;S.conta=ss.conta||null}
     catch(e){ls.del("sessao");BD.key=null;BD.diario=null}}
   S.pronto=true;if(S.perfil)abrirDiario();
+  carregarRemDia();try{idbSet("cfg",{url:CFG.url,chave:CFG.chave})}catch(e){}setTimeout(migrar10,4000);
   const q=new URLSearchParams(location.search);if(q.get("abrir")==="checkin"){history.replaceState(null,"",location.pathname);if(S.perfil==="ela")S.abrirCheckin=true}
   render(true);
 })();
 async function lerCol(col,lim){const l=await rpc("abc_ler",{diario:BD.diario,token:BD.token,col,lim})||[];const out=[];
   for(const x of l){try{out.push(Object.assign({id:x.id},await decifrar(x.data,BD.key)))}catch(e){}}return out}
 async function sincronizar(){if(!BD.diario||!temServidor)return;const g=ger;
-  try{const [r,rc,av,cf,cp]=await Promise.all([lerCol("registros",1000),lerCol("recados",200),lerCol("avisos",100),lerCol("config",1),lerCol("compras",300)]);
-    if(g!==ger)return;S.entries=r;S.recados=rc;S.avisos=av;S.compras=cp;espelharCompras();const primeira=!S.configOk;S.config=(cf[0]||{});delete S.config.id;S.configOk=true;S.dbState="ok";
+  try{const [r,rc,av,cf,cp,tf]=await Promise.all([lerCol("registros",1000),lerCol("recados",200),lerCol("avisos",100),lerCol("config",1),lerCol("compras",300),lerCol("tarefas",1000)]);
+    if(g!==ger)return;S.entries=r;S.recados=rc;S.avisos=av;S.compras=cp;S.tarefas=tf;espelharCompras();const primeira=!S.configOk;S.config=(cf[0]||{});delete S.config.id;S.configOk=true;S.dbState="ok";
     if(primeira){S.contaForm={};aposConfig()}
     if(S.abrirCheckin){S.abrirCheckin=false;if(!S.flow)iniciarFlow("checkin")}
     render()}
@@ -362,7 +387,7 @@ function aposConfig(){const patch={};const t=(S.config.temas||{})[S.perfil];
   else if(t&&(t.cor!==tema.cor||t.modo!==tema.modo)){tema=Object.assign({cor:"mar",modo:"auto"},t);ls.set("tema",tema);aplicarTema()}
   if(S.emergenciaPendente){Object.assign(patch,S.emergenciaPendente);S.emergenciaPendente=null}
   if(Object.keys(patch).length)setTimeout(()=>salvarConfig(patch).catch(()=>{}),0)}
-const lista={registros:"entries",recados:"recados",avisos:"avisos",compras:"compras"};
+const lista={registros:"entries",recados:"recados",avisos:"avisos",compras:"compras",tarefas:"tarefas"};
 async function gravar(col,id,obj){await rpc("abc_gravar",{diario:BD.diario,token:BD.token,col,id,data:Object.assign({criadoEm:obj.criadoEm||null},await cifrar(obj))})}
 async function salvar(col,dados){if(!BD.diario)throw new Error("sem diário");const id=hex(aleat(10));await gravar(col,id,dados);
   const k=lista[col];if(k){S[k]=[Object.assign({id},dados),...S[k]];render()}setTimeout(sincronizar,300);return{id}}
@@ -479,14 +504,15 @@ async function inscrever(){
   let sub=await reg.pushManager.getSubscription();if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlB64(vapid)});return sub}
 async function registrarAparelho(hora){const sub=await inscrever();const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||"America/Sao_Paulo";
   const r=await rpc("abc_lembrete_salvar",{endpoint:sub.endpoint,sub:sub.toJSON(),hora,tz});if(r!=="ok")throw erroCom("Não consegui salvar o aviso.");return sub}
-const horaCheckin=()=>{const L=ls.get("lembrete",{})||{};return L.on?L.hora:null};
+const horaCheckin=()=>{const L=ls.get("lembrete",{})||{};return L.on?L.hora:"29:59"};
+const outrosAvisos=()=>!!ls.get("saidasOn",false)||remCfg().on;
 async function ligarLembrete(hora){ls.set("lembrete",{on:true,hora});try{await registrarAparelho(hora)}catch(e){ls.set("lembrete",{on:false,hora});throw e}await enviarAgenda(true).catch(()=>{})}
 async function largarAparelho(){const sub=await assinaturaAtual();if(sub){await rpc("abc_lembrete_apagar",{endpoint:sub.endpoint}).catch(()=>{});await sub.unsubscribe().catch(()=>{})}ls.del("agendaEnviada")}
-async function desligarLembrete(){const hora=(ls.get("lembrete",{})||{}).hora||"20:00";ls.set("lembrete",{on:false,hora});
-  try{if(ls.get("saidasOn",false))await registrarAparelho(null);else await largarAparelho()}catch(e){}}
+async function desligarLembrete(){const hora=(ls.get("lembrete",{})||{}).hora||"10:00";ls.set("lembrete",{on:false,hora});
+  try{if(outrosAvisos())await registrarAparelho("29:59");else await largarAparelho()}catch(e){}}
 async function ligarSaidas(){ls.set("saidasOn",true);try{await registrarAparelho(horaCheckin())}catch(e){ls.set("saidasOn",false);throw e}await enviarAgenda(true)}
-async function desligarSaidas(){ls.set("saidasOn",false);if(horaCheckin())await enviarAgenda(true).catch(()=>{});else await largarAparelho()}
-function desligarTudo(){const L=ls.get("lembrete",{})||{};ls.set("lembrete",{on:false,hora:L.hora||"20:00"});ls.set("saidasOn",false);largarAparelho().catch(()=>{})}
+async function desligarSaidas(){ls.set("saidasOn",false);if((ls.get("lembrete",{})||{}).on||remCfg().on)await enviarAgenda(true).catch(()=>{});else await largarAparelho()}
+function desligarTudo(){const L=ls.get("lembrete",{})||{};ls.set("lembrete",{on:false,hora:L.hora||"10:00"});ls.set("saidasOn",false);const R=remCfg();ls.set("remedio",{on:false,horas:R.horas});largarAparelho().catch(()=>{})}
 /* ---------- compras e saídas de casa ---------- */
 const ITENS_COMUNS=["Pasta de dente","Sabonete","Papel higiênico","Shampoo","Desodorante","Absorvente","Remédio","Água","Comida pronta","Fruta","Leite","Pão","Café","Ração do pet"];
 const DIAS_CURTO=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
@@ -495,9 +521,9 @@ function idbSet(k,v){return new Promise(res=>{try{const r=indexedDB.open("abc",1
 const pendentes=()=>S.compras.filter(c=>!c.feito);
 function espelharCompras(){idbSet("compras",pendentes().map(c=>String(c.texto||"").slice(0,60)))}
 async function assinaturaAtual(){try{if(!pushOk())return null;const reg=swReg||await navigator.serviceWorker.ready;return await reg.pushManager.getSubscription()}catch(e){return null}}
-async function enviarAgenda(forcar){const sub=await assinaturaAtual();if(!sub)return;const on=!!ls.get("saidasOn",false);const tem=pendentes().length>0;
-  const chave=JSON.stringify([on,tem,on?(S.config.saidas||[]):[]]);if(!forcar&&ls.get("agendaEnviada","")===chave)return;
-  const r=await rpc("abc_lembrete_agenda",{endpoint:sub.endpoint,agenda:on?(S.config.saidas||[]):[],tem_compras:tem});if(r==="ok")ls.set("agendaEnviada",chave)}
+async function enviarAgenda(forcar){const sub=await assinaturaAtual();if(!sub)return;const tem=pendentes().length>0;const agenda=agendaCompleta();
+  const chave=JSON.stringify([tem,agenda]);if(!forcar&&ls.get("agendaEnviada","")===chave)return;
+  const r=await rpc("abc_lembrete_agenda",{endpoint:sub.endpoint,agenda,tem_compras:tem});if(r==="ok"){ls.set("agendaEnviada",chave);idbSet("agenda",{endpoint:sub.endpoint,agenda,tem_compras:tem})}}
 async function comprasMudou(){espelharCompras();try{await enviarAgenda()}catch(e){}}
 async function addCompra(t){t=String(t||"").trim().slice(0,60);if(!t)return;
   if(pendentes().some(c=>c.texto.toLowerCase()===t.toLowerCase())){toast("Já está na lista.");return}
@@ -541,7 +567,7 @@ function telaCompras(){const ela=S.perfil==="ela";const F=S.contaForm;const pend
 }
 async function avisarCheckinFeito(){try{if(!(ls.get("lembrete",{})||{}).on||!pushOk())return;const reg=swReg||await navigator.serviceWorker.ready;
   const sub=await reg.pushManager.getSubscription();if(sub)await rpc("abc_lembrete_checkin",{endpoint:sub.endpoint,dia:diaLocal(new Date())})}catch(e){}}
-function cardLembrete(){const L=ls.get("lembrete",{on:false,hora:"20:00"})||{on:false,hora:"20:00"};const F=S.contaForm;if(F.hora==null)F.hora=L.hora||"20:00";
+function cardLembrete(){const L=ls.get("lembrete",{on:false,hora:"10:00"})||{on:false,hora:"10:00"};const F=S.contaForm;if(F.hora==null)F.hora=L.hora||"10:00";
   const corpo=[];
   if(!pushOk()&&ehIOS()&&!instalado())corpo.push(h("div",{class:"card warn"},h("p",{class:"small",text:"No iPhone, a notificação só funciona com o app na Tela de Início: toque em Compartilhar (o quadrado com a seta) → Adicionar à Tela de Início. Depois abra o app por esse ícone e volte aqui."})));
   else if(!pushOk())corpo.push(h("p",{class:"small",text:"Este navegador não aceita notificações. Tente abrir o app no Chrome (Android) ou adicionar à Tela de Início (iPhone)."}));
@@ -549,7 +575,7 @@ function cardLembrete(){const L=ls.get("lembrete",{on:false,hora:"20:00"})||{on:
     corpo.push(h("p",{class:"small muted",text:L.on?"Ligado. Você recebe um aviso às "+L.hora+" nos dias em que ainda não fez o check-in.":"Receba um aviso no celular, no horário que escolher, se ainda não tiver feito o check-in do dia."}),
       h("div",null,h("label",{class:"lbl",for:"cf-hora",text:"Horário"}),inp),
       h("div",{class:"row"},h("button",{class:"btn primary",disabled:F.ocupadoL||null,onclick:async()=>{F.ocupadoL=true;F.msgL="";render(true);
-          try{await ligarLembrete(F.hora||"20:00");toast("Lembrete ligado para as "+(F.hora||"20:00")+".")}catch(e){F.msgL=e.msg||"Não consegui ligar o lembrete."}F.ocupadoL=false;render(true)}},
+          try{await ligarLembrete(F.hora||"10:00");toast("Lembrete ligado para as "+(F.hora||"10:00")+".")}catch(e){F.msgL=e.msg||"Não consegui ligar o lembrete."}F.ocupadoL=false;render(true)}},
           F.ocupadoL?"Ligando…":L.on?"Salvar horário":"Ligar lembrete"),
         L.on?h("button",{class:"btn",onclick:async()=>{await desligarLembrete();toast("Lembrete desligado.");render(true)}},"Desligar"):null),
       F.msgL?h("p",{role:"alert",style:"color:var(--alert);font-weight:700",text:F.msgL}):null,
@@ -567,6 +593,105 @@ function render(force){
 app.addEventListener("focusout",()=>{if(pendente)setTimeout(()=>render(),50)});
 function go(v){S.view=v;S.expanded=null;S.confirmDel=null;S.cfgDraft=null;S.contaForm={};pararRespiracao();render(true);window.scrollTo(0,0)}
 function toast(t){S.toast=t;render(true);setTimeout(()=>{if(S.toast===t){S.toast="";render(true)}},2600)}
+
+/* ---------- lembrete do remédio (repete a cada 30 min até marcar "Já tomei") ---------- */
+function idbGet(k){return new Promise(res=>{try{const r=indexedDB.open("abc",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");
+  r.onsuccess=()=>{try{const q=r.result.transaction("kv").objectStore("kv").get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(undefined)}catch(e){res(undefined)}};r.onerror=()=>res(undefined)}catch(e){res(undefined)}})}
+const remCfg=()=>{const r=ls.get("remedio",{})||{};return{on:!!r.on,horas:Array.isArray(r.horas)?r.horas:[]}};
+let remDia={dia:"",tomadas:[],pend:false};
+function remHoje(){const hoje=diaLocal(new Date());if(remDia.dia!==hoje)remDia={dia:hoje,tomadas:[],pend:false};return remDia}
+async function carregarRemDia(){const v=await idbGet("remedioDia");if(v&&v.dia)remDia=v;remHoje();render()}
+function remPendentes(){const c=remCfg();const d=remHoje();const agora=new Date();const hm=pad2(agora.getHours())+":"+pad2(agora.getMinutes());
+  const p=c.on?c.horas.filter(x=>x<=hm&&!d.tomadas.includes(x)):[];if(d.pend&&!p.includes("check-in"))p.push("check-in");return p}
+function agendaCompleta(){const on=!!ls.get("saidasOn",false);const a=on?(S.config.saidas||[]).slice(0,19):[];const c=remCfg();const d=remHoje();
+  if(c.on||d.pend)a.push({k:"remedio",horas:c.on?c.horas.slice(0,6):[],dia:d.dia,tomadas:d.tomadas,pend:!!d.pend});return a}
+async function salvarRemDia(){await idbSet("remedioDia",remDia);try{await enviarAgenda(true)}catch(e){}render()}
+async function marqueiRemedio(){const d=remHoje();const c=remCfg();const agora=new Date();const hm=pad2(agora.getHours())+":"+pad2(agora.getMinutes());
+  d.tomadas=[...new Set([...d.tomadas,...c.horas.filter(x=>x<=hm)])];d.pend=false;await salvarRemDia();toast("Anotado: remédio tomado.")}
+async function remedioDoCheckin(v){const d=remHoje();if(v==="sim"){d.pend=false;const c=remCfg();const agora=new Date();const hm=pad2(agora.getHours())+":"+pad2(agora.getMinutes());d.tomadas=[...new Set([...d.tomadas,...c.horas.filter(x=>x<=hm)])]}
+  else if(v==="nao"||v==="parcial"){d.pend=true;try{if(pushOk()&&Notification.permission==="granted"&&!(await assinaturaAtual()))await registrarAparelho(horaCheckin())}catch(e){}}
+  else return;await salvarRemDia()}
+function cardRemedioHoje(){const p=remPendentes();if(!p.length)return null;
+  const quais=p.filter(x=>x!=="check-in");
+  return h("div",{class:"card warn"},h("b",{text:"Já tomou o remédio?"}),
+    h("p",{class:"small",text:(quais.length?"Horário: "+quais.join(", ")+". ":"")+"O aviso se repete a cada 30 minutos até você marcar."}),
+    h("button",{class:"btn primary",style:"align-self:flex-start",onclick:marqueiRemedio},"Já tomei"))}
+function cardRemedioAjustes(){const c=remCfg();const F=S.contaForm;if(!F.remHoras)F.remHoras=c.horas.length?c.horas.slice():["08:00"];
+  if(!pushOk())return h("div",{class:"card"},h("h2",{text:"Lembrete do remédio"}),h("p",{class:"small",text:ehIOS()&&!instalado()?"No iPhone, coloque o app na Tela de Início e abra por lá para ligar os avisos.":"Este navegador não aceita notificações."}));
+  const linhas=F.remHoras.map((x,i)=>{const e=h("input",{type:"time",id:"rm-"+i,style:"max-width:9em",oninput:ev=>{F.remHoras[i]=ev.target.value}});e.value=x;
+    return h("div",{class:"row"},h("label",{class:"sr",for:"rm-"+i,text:"Horário "+(i+1)}),e,F.remHoras.length>1?h("button",{class:"btn ghost",onclick:()=>{F.remHoras.splice(i,1);render(true)}},"Tirar"):null)});
+  return h("div",{class:"card"},h("h2",{text:"Lembrete do remédio"}),
+    h("p",{class:"small muted",text:c.on?"Ligado: "+c.horas.join(", ")+". Se você não marcar \u201cJá tomei\u201d, o aviso se repete a cada 30 minutos (até 23h30).":"No horário do remédio, o celular avisa. Se você não marcar \u201cJá tomei\u201d, avisa de novo a cada 30 minutos (até 23h30)."}),
+    h("p",{class:"small muted",text:"Se no check-in você marcar que esqueceu ou tomou só parte, o aviso também começa."}),
+    h("div",{class:"stack",style:"gap:8px"},linhas),
+    F.remHoras.length<6?h("button",{class:"btn ghost",style:"align-self:flex-start;padding-left:0",onclick:()=>{F.remHoras.push("20:00");render(true)}},"+ Outro horário"):null,
+    h("div",{class:"row"},h("button",{class:"btn primary",disabled:F.ocupadoR||null,onclick:async()=>{const hs=[...new Set(F.remHoras.filter(x=>/^\d\d:\d\d$/.test(x)))].sort();if(!hs.length){toast("Escolha um horário.");return}
+        F.ocupadoR=true;render(true);const antes=ls.get("remedio",{});ls.set("remedio",{on:true,horas:hs});
+        try{await registrarAparelho(horaCheckin());await enviarAgenda(true);toast("Lembrete do remédio ligado.")}catch(e){ls.set("remedio",antes);toast(e.msg||"Não consegui ligar.")}F.ocupadoR=false;render(true)}},c.on?"Salvar horários":"Ligar lembrete do remédio"),
+      c.on?h("button",{class:"btn",onclick:async()=>{ls.set("remedio",{on:false,horas:c.horas});F.remHoras=null;try{await enviarAgenda(true)}catch(e){}toast("Lembrete do remédio desligado.");render(true)}},"Desligar"):null))}
+
+/* contas que já tinham avisos ligados passam a receber o check-in às 10h (dá para mudar em Ajustes) */
+async function migrar10(){try{if(ls.get("migr10",false)||!S.perfil||S.perfil!=="ela"||!pushOk()||Notification.permission!=="granted")return;
+  const sub=await assinaturaAtual();ls.set("migr10",true);if(!sub)return;ls.set("lembrete",{on:true,hora:"10:00"});await registrarAparelho("10:00");await enviarAgenda(true)}catch(e){}}
+/* ---------- aviso de novidades ---------- */
+function cardNovidades(){if(ls.get("novidades-v2",false))return null;const ela=S.perfil==="ela";
+  const ok=()=>{ls.set("novidades-v2",true);render(true)};
+  return h("div",{class:"card soft"},h("span",{class:"eyebrow",text:"Novidades no app"}),
+    h("ul",{class:"clean small"},
+      h("li",{text:"Planner: veja o dia, a semana ou o mês e toque num dia para adicionar tarefas."}),
+      ela?h("li",{text:"Lembrete do check-in todo dia às 10h para quem tem as notificações ligadas."}):null,
+      ela?h("li",{text:"Lembrete do remédio: se você não marcar \u201cJá tomei\u201d, o app avisa de novo a cada 30 minutos."}):null),
+    h("p",{class:"small",text:"Você pode mudar tudo isso em Ajustes."}),
+    h("div",{class:"row"},h("button",{class:"btn primary",onclick:()=>{ok();go("ajustes")}},"Abrir Ajustes"),h("button",{class:"btn ghost",onclick:ok},"Entendi")))}
+
+/* ---------- planner (dia, semana, mês) ---------- */
+const MESES_CURTO=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const dDe=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const somaDias=(s,n)=>{const d=dDe(s);d.setDate(d.getDate()+n);return diaLocal(d)};
+function tarefasDo(dia){return S.tarefas.filter(t=>t.dia===dia).sort((a,b)=>(a.hora||"99")<(b.hora||"99")?-1:(a.hora||"99")>(b.hora||"99")?1:String(a.criadoEm).localeCompare(String(b.criadoEm)))}
+function plEstado(){if(!S.pl)S.pl={modo:ls.get("plModo","mes"),sel:diaLocal(new Date())};return S.pl}
+function plMover(n){const p=plEstado();const d=dDe(p.sel);if(p.modo==="dia")d.setDate(d.getDate()+n);else if(p.modo==="semana")d.setDate(d.getDate()+7*n);else{d.setDate(1);d.setMonth(d.getMonth()+n)}p.sel=diaLocal(d);render(true)}
+function plTitulo(){const p=plEstado();const d=dDe(p.sel);
+  if(p.modo==="mes")return MESES[d.getMonth()][0].toUpperCase()+MESES[d.getMonth()].slice(1)+" de "+d.getFullYear();
+  if(p.modo==="semana"){const ini=somaDias(p.sel,-d.getDay()),fim=somaDias(ini,6);const a=dDe(ini),b=dDe(fim);
+    return a.getDate()+(a.getMonth()!==b.getMonth()?" de "+MESES_CURTO[a.getMonth()]:"")+" a "+b.getDate()+" de "+MESES_CURTO[b.getMonth()]}
+  return nomeDia(p.sel)}
+async function addTarefa(dia,texto,hora){texto=String(texto||"").trim().slice(0,120);if(!texto){toast("Escreva a tarefa.");return false}
+  try{await salvar("tarefas",{texto,dia,hora:hora||null,feito:false,criadoEm:new Date().toISOString(),quem:S.perfil});return true}catch(e){toast("Não consegui salvar.");return false}}
+function itemTarefa(t){return h("div",{class:"tarefa"+(t.feito?" feita":"")},
+  h("button",{class:"tk","aria-pressed":t.feito?"true":"false","aria-label":t.feito?"Marcar como não feita":"Marcar como feita",onclick:async()=>{try{await atualizar("tarefas",t,{feito:!t.feito})}catch(e){toast("Não consegui salvar.")}}}),
+  h("span",{class:"tx"},t.hora?h("b",{class:"hr",text:t.hora}):null,h("span",{text:t.texto})),
+  h("button",{class:"btn ghost",style:"min-height:40px;padding:6px 10px","aria-label":"Apagar tarefa",onclick:async()=>{try{await apagarDoc("tarefas",t.id);toast("Tarefa apagada.")}catch(e){toast("Não consegui apagar.")}}},"Apagar"))}
+function painelDia(dia){const F=S.contaForm;if(F.tDia!==dia){F.tDia=dia;F.tTexto="";F.tHora=""}
+  const lista=tarefasDo(dia);
+  const inp=h("input",{type:"text",id:"t-texto",placeholder:"Nova tarefa",maxlength:"120",oninput:e=>{F.tTexto=e.target.value}});inp.value=F.tTexto||"";
+  const hr=h("input",{type:"time",id:"t-hora",style:"max-width:8.5em","aria-label":"Horário (opcional)",oninput:e=>{F.tHora=e.target.value}});hr.value=F.tHora||"";
+  return h("div",{class:"card"},h("h2",{text:nomeDia(dia)}),
+    lista.length?h("div",{class:"stack",style:"gap:6px"},lista.map(itemTarefa)):h("p",{class:"small muted",text:"Nenhuma tarefa neste dia."}),
+    h("form",{class:"stack",style:"gap:8px",onsubmit:async e=>{e.preventDefault();if(await addTarefa(dia,F.tTexto,F.tHora)){F.tTexto="";F.tHora="";render(true);const el=document.getElementById("t-texto");if(el)el.focus()}}},
+      h("label",{class:"lbl",for:"t-texto",text:"Adicionar tarefa"}),inp,
+      h("div",{class:"row"},h("span",{class:"small muted",text:"Horário (opcional)"}),hr,h("button",{class:"btn primary",type:"submit",style:"margin-left:auto"},"Adicionar"))))}
+function telaPlanner(){const p=plEstado();const hoje=diaLocal(new Date());
+  const modo=(k,l)=>h("button",{"aria-pressed":p.modo===k?"true":"false",onclick:()=>{p.modo=k;ls.set("plModo",k);render(true)}},l);
+  const topo=h("div",{class:"stack",style:"gap:12px"},
+    h("div",{class:"row between"},h("h1",{text:"Planner"}),h("button",{class:"btn",onclick:()=>{p.sel=hoje;render(true)}},"Hoje")),
+    h("div",{class:"tabs tres"},modo("dia","Dia"),modo("semana","Semana"),modo("mes","Mês")),
+    h("div",{class:"row between",style:"flex-wrap:nowrap"},h("button",{class:"btn ghost","aria-label":"Anterior",onclick:()=>plMover(-1)},"‹"),
+      h("b",{style:"text-align:center;font-family:var(--font-display);font-weight:500",text:plTitulo()}),h("button",{class:"btn ghost","aria-label":"Próximo",onclick:()=>plMover(1)},"›")));
+  let corpo=null;
+  if(p.modo==="mes"){const d=dDe(p.sel);const ini=new Date(d.getFullYear(),d.getMonth(),1);const ini0=somaDias(diaLocal(ini),-ini.getDay());const mes=d.getMonth();
+    const cels=[];for(let i=0;i<42;i++){const dia=somaDias(ini0,i);const dd=dDe(dia);if(i>=35&&dd.getMonth()!==mes)break;const ts=tarefasDo(dia);const abertas=ts.filter(t=>!t.feito).length;
+      cels.push(h("button",{class:"cel"+(dd.getMonth()!==mes?" fora":"")+(dia===hoje?" hoje":"")+(dia===p.sel?" sel":""),"aria-label":nomeDia(dia)+(ts.length?", "+ts.length+" tarefa"+(ts.length>1?"s":""):""),onclick:()=>{p.sel=dia;render(true)}},
+        h("span",{class:"n",text:String(dd.getDate())}),ts.length?h("span",{class:"pts"},ts.slice(0,3).map(t=>h("i",{class:t.feito?"ok":""}))):null,abertas>3?h("span",{class:"mais",text:"+"+(abertas-3)}):null))}
+    corpo=[h("div",{class:"mes"},DIAS_CURTO.map(n=>h("span",{class:"dsem",text:n})),cels),painelDia(p.sel)]}
+  else if(p.modo==="semana"){const d=dDe(p.sel);const ini=somaDias(p.sel,-d.getDay());
+    corpo=[h("div",{class:"stack",style:"gap:8px"},Array.from({length:7},(_,i)=>{const dia=somaDias(ini,i);const ts=tarefasDo(dia);const dd=dDe(dia);
+      return h("button",{class:"semdia"+(dia===hoje?" hoje":"")+(dia===p.sel?" sel":""),onclick:()=>{p.sel=dia;render(true)}},
+        h("span",{class:"q"},h("small",{text:DIAS_CURTO[i]}),h("b",{text:String(dd.getDate())})),
+        h("span",{class:"l"},ts.length?ts.slice(0,4).map(t=>h("span",{class:"lt"+(t.feito?" feita":""),text:(t.hora?t.hora+" ":"")+t.texto})):h("span",{class:"small muted",text:"Livre"}),ts.length>4?h("span",{class:"small muted",text:"+"+(ts.length-4)+" mais"}):null))})),
+      painelDia(p.sel)]}
+  else corpo=painelDia(p.sel);
+  return h("div",{class:"stack",style:"gap:16px"},topo,corpo)}
 
 /* ---------- convite para pôr na tela inicial ---------- */
 let pedidoInstalar=null;
@@ -593,16 +718,16 @@ function view(){
   if(S.sos)return telaSOS();
   if(S.flow)return telaFlow();
   const ela=S.perfil==="ela";
-  const telas=ela?{inicio:inicioEla,compras:telaCompras,cartoes:telaCartoes,historico:telaHistorico,padroes:telaPadroes,calma:telaCalma,ajustes:telaAjustes}
-                 :{inicio:inicioParceiro,compras:telaCompras,historico:telaHistorico,padroes:telaPadroes,ajudar:telaAjudar,ajustes:telaAjustes};
+  const telas=ela?{inicio:inicioEla,planner:telaPlanner,compras:telaCompras,cartoes:telaCartoes,historico:telaHistorico,padroes:telaPadroes,calma:telaCalma,ajustes:telaAjustes}
+                 :{inicio:inicioParceiro,planner:telaPlanner,compras:telaCompras,historico:telaHistorico,padroes:telaPadroes,ajudar:telaAjudar,ajustes:telaAjustes};
   if(ela&&S.legado)telas.migrar=telaMigrar;
   const f=telas[S.view]||telas.inicio;
   return h("div",null,h("main",{class:"wrap"},avisoDb(),S.view==="inicio"?cardInstalar():null,f()),nav(ela));
 }
 function nav(ela){
-  const itens=ela?[["inicio","Início",IC.home],["historico","Histórico",IC.list],["padroes","Padrões",IC.chart],["calma","Calma",IC.leaf],["ajustes","Ajustes",IC.gear]]
-                 :[["inicio","Início",IC.home],["historico","Histórico",IC.list],["padroes","Padrões",IC.chart],["ajudar","Como ajudar",IC.heart],["ajustes","Ajustes",IC.gear]];
-  return h("nav",{class:"footer nav","aria-label":"Menu"},h("div",{class:"in"},itens.map(([k,l,i])=>h("button",{"aria-current":S.view===k?"page":null,onclick:()=>go(k)},icon(i),l))));
+  const itens=ela?[["inicio","Início",IC.home],["planner","Planner",IC.cal],["historico","Histórico",IC.list],["padroes","Padrões",IC.chart],["calma","Calma",IC.leaf],["ajustes","Ajustes",IC.gear]]
+                 :[["inicio","Início",IC.home],["planner","Planner",IC.cal],["historico","Histórico",IC.list],["padroes","Padrões",IC.chart],["ajudar","Como ajudar",IC.heart],["ajustes","Ajustes",IC.gear]];
+  return h("nav",{class:"footer nav","aria-label":"Menu"},h("div",{class:"in seis"},itens.map(([k,l,i])=>h("button",{"aria-current":S.view===k?"page":null,onclick:()=>go(k)},icon(i),l))));
 }
 function avisoDb(){
   if(S.dbState==="indisponivel")return h("div",{class:"card warn"},h("b",{text:"O app ainda não foi ligado ao banco de dados."}));
@@ -747,6 +872,7 @@ function inicioEla(){
       h("b",{text:"Novidade: escolha a cor do app"}),h("p",{class:"small",text:"Agora dá para mudar a cor do app (tem até bordô) e deixar claro ou escuro. Fica em Ajustes, no quadro Cor e aparência."}),
       h("div",{class:"row"},h("button",{class:"btn primary",onclick:()=>{ls.set("aviso-cor-visto",true);go("ajustes")}},"Ir para Ajustes"),
         h("button",{class:"btn ghost",onclick:()=>{ls.set("aviso-cor-visto",true);render(true)}},"Ok, entendi"))):null,
+    cardNovidades(),cardRemedioHoje(),
     botaoEmergencia(),
     h("button",{class:"sos-btn",onclick:iniciarSOS},h("b",{text:"Guia para me acalmar"}),h("span",{text:"Um passo de cada vez para o corpo se acalmar"})),
     h("div",{class:"actions"},
@@ -771,7 +897,7 @@ function inicioParceiro(){
   const seg=S.entries.find(e=>e.dia===hoje&&((e.tipo==="checkin"&&e.seguranca===2)||(e.tipo==="abc"&&(e.c?.comportamentos||[]).includes("Vontade de me machucar"))));
   return h("div",{class:"stack",style:"gap:18px"},
     h("div",{class:"stack",style:"gap:4px"},h("h1",{text:"Como "+nomeEla3().replace(/^Ela$/,"ela")+" está"}),h("p",{class:"muted",text:"Painel de cuidado. Aqui você acompanha e deixa recados."})),
-    cartoesParaParceiro(),
+    cardNovidades(),cartoesParaParceiro(),
     h("button",{class:"action",onclick:()=>go("compras")},h("span",{class:"ico"},icon(IC.list)),h("b",{text:"Lista de compras dela"}),h("span",{class:"small muted",text:pendentes().length?"Falta: "+pendentes().slice(0,4).map(c=>c.texto).join(", "):"Nada faltando. Você também pode adicionar itens."})),
     seg?h("div",{class:"card alert"},h("b",{text:"Hoje ela registrou pensamentos de se machucar."}),h("p",{text:"Procure ela com calma, fique por perto e pergunte do que precisa. Se houver risco imediato, ligue 192 (SAMU). O CVV atende 24h no 188."})):null,
     ultimoCheck?h("div",{class:"card"},h("span",{class:"eyebrow",text:"Último check-in · "+haQuanto(ultimoCheck.criadoEm)}),
@@ -1116,7 +1242,7 @@ function telaAjustes(){
           h("button",{class:"btn danger",onclick:apagarLegado},"Apagar cópia antiga"),h("button",{class:"btn",onclick:()=>{F.confirmLegado=false;render(true)}},"Cancelar"))
         :h("button",{class:"btn",style:"align-self:flex-start",onclick:()=>{F.confirmLegado=true;render(true)}},"Apagar cópia antiga")):null;
   return h("div",{class:"stack",style:"gap:18px"},h("h1",{text:"Ajustes"}),
-    conta,cardLembrete(),temaCard,emCard,
+    conta,cardLembrete(),ela?cardRemedioAjustes():null,temaCard,emCard,
     h("div",{class:"card"},h("h2",{text:"Neste aparelho"}),tg("grande","Texto maior","Aumenta o tamanho de todas as letras."),tg("calmo","Sem animações","Desliga movimentos na tela.")),
     h("div",{class:"card"},h("h2",{text:"WhatsApp para os cartões"}),
       h("p",{class:"small muted",text:"Número de quem recebe os cartões prontos. Com DDD, só números. Ex.: 11 98765-4321."}),
@@ -1222,7 +1348,7 @@ async function finalizar(){
   if(f.tipo==="abc"&&f.d.quando==="Ontem")dia=diaLocal(new Date(agora.getTime()-864e5));
   const doc=Object.assign({tipo:f.tipo,quem:"ela",criadoEm:agora.toISOString(),dia},JSON.parse(JSON.stringify(f.d)));
   if(doc.nota)doc.nota=doc.nota.slice(0,1500);
-  try{await salvar("registros",doc);ls.del("rascunho-"+f.tipo);if(f.tipo==="checkin")avisarCheckinFeito();
+  try{await salvar("registros",doc);ls.del("rascunho-"+f.tipo);if(f.tipo==="checkin"){avisarCheckinFeito();remedioDoCheckin(doc.remedio)}
     const risco=(f.tipo==="checkin"&&f.d.seguranca===2)||(f.tipo==="abc"&&f.d.c.comportamentos.includes("Vontade de me machucar"));
     S.flow={tipo:f.tipo,feito:true,risco}}
   catch(e){f.salvando=false;render(true);toast("Não consegui salvar. Seu registro continua guardado aqui; tente de novo.")}

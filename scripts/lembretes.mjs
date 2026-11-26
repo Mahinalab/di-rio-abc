@@ -1,4 +1,4 @@
-// Envia o lembrete de check-in para quem pediu, no horário escolhido.
+// Envia o lembrete de check-in (todo dia às 10h e no horário que a pessoa escolheu) e os avisos de saída.
 // Roda no GitHub Actions a cada 15 minutos. Precisa dos segredos SUPABASE_URL e SUPABASE_SECRET_KEY.
 import webpush from "web-push";
 
@@ -36,6 +36,7 @@ function agoraEm(tz) {
 
 const vapid = await chavesVapid();
 webpush.setVapidDetails(APP_URL, vapid.publicKey, vapid.privateKey);
+const CHECKIN_FIXO = 10 * 60;
 const min = hm => { const [h, m] = String(hm).split(":").map(Number); return h * 60 + m; };
 const hhmm = n => String(Math.floor(n / 60)).padStart(2, "0") + ":" + String(n % 60).padStart(2, "0");
 // avisos de saída: na hora de sair, no meio do tempo fora (se for 1h30 ou mais) e meia hora antes de voltar
@@ -64,6 +65,12 @@ for (const l of lista) {
     }
     const ja = l.enviados && l.enviados.dia === dia ? [...(l.enviados.ids || [])] : [];
     let mudou = false;
+    // check-in fixo das 10h para todo aparelho com avisos ligados (além do horário que a pessoa escolheu)
+    const agoraMin = min(hm);
+    if (agoraMin >= CHECKIN_FIXO && agoraMin <= CHECKIN_FIXO + 60 && !ja.includes("ck10") && l.ultimo_checkin !== dia && l.ultimo_envio !== dia && !patch.ultimo_envio) {
+      await enviar(l, { title: "Diário ABC", body: "Bom dia! Hora do check-in de hoje. Leva uns 2 minutos.", url: "./?abrir=checkin", tag: "checkin10-" + dia });
+      ja.push("ck10"); mudou = true; enviados++;
+    } else if (!ja.includes("ck10") && agoraMin >= CHECKIN_FIXO && l.ultimo_checkin === dia) { ja.push("ck10"); mudou = true; }
     for (const ev of eventosDeSaida(l.agenda, dow)) {
       const agora = min(hm);
       if (agora < ev.em || agora > ev.em + 60 || ja.includes(ev.id)) continue;

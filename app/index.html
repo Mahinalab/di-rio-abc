@@ -594,7 +594,7 @@ function render(force){
   overlay.replaceChildren(...[S.big?bigCard():null,S.toast?h("div",{class:"toast",role:"status",text:S.toast}):null].filter(Boolean));
 }
 app.addEventListener("focusout",()=>{if(pendente)setTimeout(()=>render(),50)});
-function go(v){S.view=v;S.expanded=null;S.confirmDel=null;S.cfgDraft=null;S.contaForm={};pararRespiracao();render(true);window.scrollTo(0,0)}
+function go(v){if(S.pl)S.pl.pop=false;S.view=v;S.expanded=null;S.confirmDel=null;S.cfgDraft=null;S.contaForm={};pararRespiracao();render(true);window.scrollTo(0,0)}
 function toast(t){S.toast=t;render(true);setTimeout(()=>{if(S.toast===t){S.toast="";render(true)}},2600)}
 
 /* ---------- lembrete do remédio (repete a cada 30 min até marcar "Já tomei") ---------- */
@@ -652,7 +652,7 @@ const MESES_CURTO=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","
 const dDe=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
 const somaDias=(s,n)=>{const d=dDe(s);d.setDate(d.getDate()+n);return diaLocal(d)};
 function tarefasDo(dia){return S.tarefas.filter(t=>t.dia===dia).sort((a,b)=>(a.hora||"99")<(b.hora||"99")?-1:(a.hora||"99")>(b.hora||"99")?1:String(a.criadoEm).localeCompare(String(b.criadoEm)))}
-function plEstado(){if(!S.pl)S.pl={modo:ls.get("plModo","mes"),sel:diaLocal(new Date())};return S.pl}
+function plEstado(){if(!S.pl)S.pl={modo:ls.get("plModo","mes"),sel:diaLocal(new Date()),pop:false};return S.pl}
 function plMover(n){const p=plEstado();const d=dDe(p.sel);if(p.modo==="dia")d.setDate(d.getDate()+n);else if(p.modo==="semana")d.setDate(d.getDate()+7*n);else{d.setDate(1);d.setMonth(d.getMonth()+n)}p.sel=diaLocal(d);render(true)}
 function plTitulo(){const p=plEstado();const d=dDe(p.sel);
   if(p.modo==="mes")return MESES[d.getMonth()][0].toUpperCase()+MESES[d.getMonth()].slice(1)+" de "+d.getFullYear();
@@ -665,13 +665,14 @@ function itemTarefa(t){return h("div",{class:"tarefa"+(t.feito?" feita":"")},
   h("button",{class:"tk","aria-pressed":t.feito?"true":"false","aria-label":t.feito?"Marcar como não feita":"Marcar como feita",onclick:async()=>{try{await atualizar("tarefas",t,{feito:!t.feito})}catch(e){toast("Não consegui salvar.")}}}),
   h("span",{class:"tx"},t.hora?h("b",{class:"hr",text:t.hora}):null,h("span",{text:t.texto})),
   h("button",{class:"btn ghost",style:"min-height:40px;padding:6px 10px","aria-label":"Apagar tarefa",onclick:async()=>{try{await apagarDoc("tarefas",t.id);toast("Tarefa apagada.")}catch(e){toast("Não consegui apagar.")}}},"Apagar"))}
-function painelDia(dia){const F=S.contaForm;if(F.tDia!==dia){F.tDia=dia;F.tTexto="";F.tHora=""}
+function painelDia(dia,op){op=op||{};const F=S.contaForm;if(F.tDia!==dia){F.tDia=dia;F.tTexto="";F.tHora=""}
   const lista=tarefasDo(dia);
   const inp=h("input",{type:"text",id:"t-texto",placeholder:"Nova tarefa",maxlength:"120",oninput:e=>{F.tTexto=e.target.value}});inp.value=F.tTexto||"";
   const hr=h("input",{type:"time",id:"t-hora",style:"max-width:8.5em","aria-label":"Horário (opcional)",oninput:e=>{F.tHora=e.target.value}});hr.value=F.tHora||"";
-  return h("div",{class:"card"},h("h2",{text:nomeDia(dia)}),
-    lista.length?h("div",{class:"stack",style:"gap:6px"},lista.map(itemTarefa)):h("p",{class:"small muted",text:"Nenhuma tarefa neste dia."}),
-    h("form",{class:"stack",style:"gap:8px",onsubmit:async e=>{e.preventDefault();if(await addTarefa(dia,F.tTexto,F.tHora)){F.tTexto="";F.tHora="";render(true);const el=document.getElementById("t-texto");if(el)el.focus()}}},
+  const fechar=()=>{plEstado().pop=false;render(true)};
+  return h("div",{class:"card"},h("div",{class:"row between",style:"flex-wrap:nowrap"},h("h2",{text:nomeDia(dia)}),op.popup?h("button",{class:"btn ghost","aria-label":"Fechar",onclick:fechar},"Fechar"):null),
+    op.soForm?null:lista.length?h("div",{class:"stack",style:"gap:6px"},lista.map(itemTarefa)):h("p",{class:"small muted",text:"Nenhuma tarefa neste dia."}),
+    op.semForm?h("button",{class:"btn primary",style:"align-self:flex-start",onclick:()=>{plEstado().pop=true;render(true)}},"+ Adicionar tarefa"):h("form",{class:"stack",style:"gap:8px",onsubmit:async e=>{e.preventDefault();if(await addTarefa(dia,F.tTexto,F.tHora)){F.tTexto="";F.tHora="";if(op.soForm)plEstado().pop=false;render(true);const el=document.getElementById("t-texto");if(el)el.focus()}}},
       h("label",{class:"lbl",for:"t-texto",text:"Adicionar tarefa"}),inp,
       h("div",{class:"row"},h("span",{class:"small muted",text:"Horário (opcional)"}),hr,h("button",{class:"btn primary",type:"submit",style:"margin-left:auto"},"Adicionar"))))}
 function telaPlanner(){const p=plEstado();const hoje=diaLocal(new Date());
@@ -684,17 +685,18 @@ function telaPlanner(){const p=plEstado();const hoje=diaLocal(new Date());
   let corpo=null;
   if(p.modo==="mes"){const d=dDe(p.sel);const ini=new Date(d.getFullYear(),d.getMonth(),1);const ini0=somaDias(diaLocal(ini),-ini.getDay());const mes=d.getMonth();
     const cels=[];for(let i=0;i<42;i++){const dia=somaDias(ini0,i);const dd=dDe(dia);if(i>=35&&dd.getMonth()!==mes)break;const ts=tarefasDo(dia);const abertas=ts.filter(t=>!t.feito).length;
-      cels.push(h("button",{class:"cel"+(dd.getMonth()!==mes?" fora":"")+(dia===hoje?" hoje":"")+(dia===p.sel?" sel":""),"aria-label":nomeDia(dia)+(ts.length?", "+ts.length+" tarefa"+(ts.length>1?"s":""):""),onclick:()=>{p.sel=dia;render(true)}},
+      cels.push(h("button",{class:"cel"+(dd.getMonth()!==mes?" fora":"")+(dia===hoje?" hoje":"")+(dia===p.sel?" sel":""),"aria-label":nomeDia(dia)+(ts.length?", "+ts.length+" tarefa"+(ts.length>1?"s":""):""),onclick:()=>{p.sel=dia;p.pop=true;render(true)}},
         h("span",{class:"n",text:String(dd.getDate())}),ts.length?h("span",{class:"pts"},ts.slice(0,3).map(t=>h("i",{class:t.feito?"ok":""}))):null,abertas>3?h("span",{class:"mais",text:"+"+(abertas-3)}):null))}
-    corpo=[h("div",{class:"mes"},DIAS_CURTO.map(n=>h("span",{class:"dsem",text:n})),cels),painelDia(p.sel)]}
+    corpo=[h("div",{class:"mes"},DIAS_CURTO.map(n=>h("span",{class:"dsem",text:n})),cels),h("p",{class:"small muted",style:"text-align:center",text:"Toque num dia para ver e adicionar tarefas."})]}
   else if(p.modo==="semana"){const d=dDe(p.sel);const ini=somaDias(p.sel,-d.getDay());
     corpo=[h("div",{class:"stack",style:"gap:8px"},Array.from({length:7},(_,i)=>{const dia=somaDias(ini,i);const ts=tarefasDo(dia);const dd=dDe(dia);
-      return h("button",{class:"semdia"+(dia===hoje?" hoje":"")+(dia===p.sel?" sel":""),onclick:()=>{p.sel=dia;render(true)}},
+      return h("button",{class:"semdia"+(dia===hoje?" hoje":"")+(dia===p.sel?" sel":""),onclick:()=>{p.sel=dia;p.pop=true;render(true)}},
         h("span",{class:"q"},h("small",{text:DIAS_CURTO[i]}),h("b",{text:String(dd.getDate())})),
         h("span",{class:"l"},ts.length?ts.slice(0,4).map(t=>h("span",{class:"lt"+(t.feito?" feita":""),text:(t.hora?t.hora+" ":"")+t.texto})):h("span",{class:"small muted",text:"Livre"}),ts.length>4?h("span",{class:"small muted",text:"+"+(ts.length-4)+" mais"}):null))})),
-      painelDia(p.sel)]}
-  else corpo=painelDia(p.sel);
-  return h("div",{class:"stack",style:"gap:16px"},topo,corpo)}
+      h("p",{class:"small muted",style:"text-align:center",text:"Toque num dia para ver e adicionar tarefas."})]}
+  else corpo=painelDia(p.sel,{semForm:true});
+  const pop=p.pop?h("div",{class:"popfundo",onclick:e=>{if(e.target===e.currentTarget){p.pop=false;render(true)}}},h("div",{class:"popup",role:"dialog","aria-modal":"true"},painelDia(p.sel,{popup:true,soForm:p.modo==="dia"}))):null;
+  return h("div",{class:"stack",style:"gap:16px"},topo,corpo,pop)}
 
 /* ---------- convite para pôr na tela inicial ---------- */
 let pedidoInstalar=null;
